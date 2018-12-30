@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CardsApplication implements CommandLineRunner {
     
     @Autowired
-    private CardSearchService cardService;
+    private CardSearchService cardSearchService;
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(CardsApplication.class);
@@ -48,10 +48,10 @@ public class CardsApplication implements CommandLineRunner {
                     String colors = readInput.nextLine();
                     System.out.print("Set Name: ");
                     String setName = readInput.nextLine();
-                    cardService.getluceneCards(name, text, type, colors, setName);
+                    cardSearchService.getluceneCards(name, text, type, colors, setName);
                     break;
                 case 2:
-                    cardService.reloadIndex();
+                    System.out.println(cardSearchService.reloadIndex());
                     break;
                 case 3:
                     done = true;

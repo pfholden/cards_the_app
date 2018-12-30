@@ -38,9 +38,13 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.SortableField;
+import org.hibernate.search.annotations.Store;
 
 @Indexed
 @Entity // This tells Hibernate to make a table out of this class
@@ -59,7 +63,10 @@ public class Card implements Serializable{
     private String id;
     private String layout;
     
-    @Field
+    @Fields ({@Field,
+            @Field(name="sortName", analyze = Analyze.NO, store = Store.NO, index = org.hibernate.search.annotations.Index.NO)
+            })
+    @SortableField (forField = "sortName")
     private String name;
     
     @ElementCollection
