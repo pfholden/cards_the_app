@@ -19,6 +19,8 @@ import com.tantech.cards.db.MTGSet;
 
 public interface MTGSetRepository extends CrudRepository<MTGSet, Integer> {
     
-    public MTGSet findByName(String Name);
+    public MTGSet findByName(String name);
+    
+    public MTGSet findByCode(String setCode);
     
 }

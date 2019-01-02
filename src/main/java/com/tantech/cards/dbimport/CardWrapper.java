@@ -6,10 +6,7 @@
 package com.tantech.cards.dbimport;
 
 import com.tantech.cards.db.*;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -18,6 +15,7 @@ import java.util.List;
 
 @JsonRootName(value = "cards")
 public class CardWrapper {
+    
     private Card cards[];
 
     public Card[] getCards() {
@@ -28,5 +26,29 @@ public class CardWrapper {
         this.cards = cards;
     }
 
+    public void addToDB (MTGSetRepository setRepo, CardRepository cardRepo){
+        Integer i=1;
+    
+         for (Card importCard:cards){
+            System.out.println(i++);
+            
+          
 
+            MTGSet setRead = setRepo.findByName(importCard.getSetName());
+
+            if ( setRead == null){
+                setRead = new MTGSet();
+                setRead.setName(importCard.getSetName());
+                setRead.setCode(importCard.getSetCode());
+                setRepo.save(setRead);
+                importCard.setMtgSet(setRead);
+                cardRepo.save(importCard);
+//                    returnStr = "Set and Card added";
+            } else if (cardRepo.findByNameAndMtgSet(importCard.getName(), setRead) == null){
+                importCard.setMtgSet(setRead);
+                cardRepo.save(importCard);   
+//                    returnStr += "Card added";
+            }   
+        }
+    }
 }

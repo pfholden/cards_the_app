@@ -16,12 +16,14 @@ import java.util.regex.Pattern;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author pfholden
  */
 public class GetAllCards {
+     
     protected static String ENDPOINT = "https://api.magicthegathering.io/v1";
     protected static OkHttpClient CLIENT = new OkHttpClient();
     private static String DELIM_LINK = ",";
@@ -32,7 +34,7 @@ public class GetAllCards {
 //		return getList(RESOURCE_PATH, "cards", Card.class);
 //	}
         
-    public static List<CardWrapper> getAllCards() throws IOException{
+    public static boolean getAllCards(MTGSetRepository setRepo, CardRepository cardRepo) throws IOException{
           
         String path = "cards";
         
@@ -42,14 +44,16 @@ public class GetAllCards {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         
+//        Need to add retry if call to HTTP server times out.
         response = CLIENT.newCall(request).execute();
 
-        ArrayList<CardWrapper> objectList = new ArrayList<>();
+//        ArrayList<CardWrapper> newCardWrapper = new ArrayList<>();
+        CardWrapper newCardWrapper;
         String linkHeader = response.headers().get("Link");
         if (linkHeader == null || linkHeader.isEmpty() || path.contains("page=")) {
-            objectList.add(mapper.readValue(response.body().string(), CardWrapper.class));    
-            
-            return objectList;
+            newCardWrapper = mapper.readValue(response.body().string(), CardWrapper.class);    
+            newCardWrapper.addToDB(setRepo, cardRepo);
+            return true;
         } else {
 
             int numberOfPages = 0;
@@ -65,20 +69,28 @@ public class GetAllCards {
                     }
             }
 
-            objectList.add(mapper.readValue(response.body().string(), CardWrapper.class));
+            newCardWrapper = mapper.readValue(response.body().string(), CardWrapper.class);    
+            newCardWrapper.addToDB(setRepo, cardRepo);
             System.out.println("Downloading "+numberOfPages+" pages");
             if (!url.contains("?")) {
                     url += "?";
             }
 
             for(int i = 1; i <= numberOfPages; i++){
-                    request = new Request.Builder().url(url + "&page=" + i).build();
-                    response = CLIENT.newCall(request).execute();
-                    objectList.add(mapper.readValue(response.body().string(), CardWrapper.class));
-                    System.out.println("Downloading page"+i);
+                request = new Request.Builder().url(url + "&page=" + i).build();
+                        
+//        Need to add retry if call to HTTP server times out.
+                response = CLIENT.newCall(request).execute();
+                // @FIXME 
+                System.out.println("Downloading page"+i+" and adding to DB");
+                
+//                    Add pages to DB
+                newCardWrapper = mapper.readValue(response.body().string(), CardWrapper.class);    
+                newCardWrapper.addToDB(setRepo, cardRepo);
+                    
             }
 
-            return objectList;
+            return true;
         }
-    }        
+    }            
 }

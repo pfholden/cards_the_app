@@ -22,6 +22,7 @@ package com.tantech.cards.db;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
@@ -125,8 +126,8 @@ public class Card implements Serializable{
     private String flavor;
     private String artist;
     private String number;
-    private Integer power;
-    private Integer toughness;
+    private String power;
+    private String toughness;
     private String loyalty;
     private int multiverseid = -1;
 //	private int[] variations;
@@ -139,7 +140,9 @@ public class Card implements Serializable{
     private boolean reserved;
     private String releaseDate;
     private boolean starter;
-    private String setShortName;
+    
+    @JsonProperty("set")
+    private String setCode;
     
     @Field
     private String setName;
@@ -310,19 +313,19 @@ public class Card implements Serializable{
             this.number = number;
     }
 
-    public Integer getPower() {
+    public String getPower() {
             return power;
     }
 
-    public void setPower(Integer power) {
+    public void setPower(String power) {
             this.power = power;
     }
 
-    public Integer getToughness() {
+    public String getToughness() {
             return toughness;
     }
 
-    public void setToughness(Integer toughness) {
+    public void setToughness(String toughness) {
             this.toughness = toughness;
     }
 
@@ -421,26 +424,25 @@ public class Card implements Serializable{
     public void setStarter(boolean starter) {
             this.starter = starter;
     }
-//
-//	/**
-//	 * dirty compare to in order to start testing. Just comparing the
-//	 * MultiverseId which should be unique.
-//	 *
-//	 * @param toCompare A {@link Card} object hopefully
-//	 * @return true if the same setShortName, false if different.
-//	 */
-//	@Override
-//	public boolean equals(Object toCompare) {
-//		if (toCompare instanceof Card) {
-//			Card cardCompare = (Card) toCompare;
-//			return getMultiverseid() == cardCompare.getMultiverseid()
-//					&& getName().equals(cardCompare.getName())
-//					&& getCmc() == cardCompare.getCmc();
-//		} else {
-//			return false;
-//		}
-//	}
-//
+
+	/**
+	 * dirty compare to in order to start testing. Just comparing the
+	 * MultiverseId which should be unique.
+	 *
+	 * @param toCompare A {@link Card} object hopefully
+	 * @return true if the same setCode, false if different.
+	 */
+	@Override
+	public boolean equals(Object toCompare) {
+		if (toCompare instanceof Card) {
+			Card cardCompare = (Card) toCompare;
+			return getName().equals(cardCompare.getName());
+//					&& getCmc().equals(cardCompare.getCmc());
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * Prints the Card name and multiverseId which should give enough info for
 	 * debug testing.
@@ -450,16 +452,17 @@ public class Card implements Serializable{
 	@Override
 	public String toString() {
 		return "\nCard Name: " + getName() +
-				"\nMultiverse Id: " + getMultiverseid() +
-				"\nMana Cost: " + getManaCost();
+                        "\nMultiverse Id: " + getMultiverseid() +
+                        "\nMana Cost: " + getManaCost() +
+                        "\nSet name: " + getSetName();
 	}
 
-    public String getSet() {
-            return setShortName;
+    public String getSetCode() {
+            return setCode;
     }
 
-    public void setSet(String set) {
-            this.setShortName = set;
+    public void setSetCode(String set) {
+            this.setCode = set;
     }
     
     public String getSetName() {

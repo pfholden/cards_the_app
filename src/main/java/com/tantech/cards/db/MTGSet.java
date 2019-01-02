@@ -44,7 +44,22 @@ public class MTGSet {
         generator = ObjectIdGenerators.PropertyGenerator.class, 
         property = "cardId")
     private Set<Card> setCards;
-
+    
+    // mappedBy needs to be set to the field name from the other side of the relationship.
+//    @OneToMany(mappedBy="setName", cascade = CascadeType.ALL)
+//    @JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class, 
+//        property = "ownedId")
+//    private Set<Card> setOwned;
+//
+//    public Set<Card> getSetOwned() {
+//        return setOwned;
+//    }
+//
+//    public void setSetOwned(Set<Card> setOwned) {
+//        this.setOwned = setOwned;
+//    }
+    
     public Set<Card> getSetCards() {
         return setCards;
     }

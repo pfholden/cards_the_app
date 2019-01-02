@@ -1,6 +1,7 @@
 package com.tantech.cards;
 
 import com.tantech.cards.search.CardSearchService;
+import com.tantech.cards.dbimport.DbImportService;
 import static java.lang.System.exit;
 import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ public class CardsApplication implements CommandLineRunner {
     
     @Autowired
     private CardSearchService cardSearchService;
+    @Autowired
+    private DbImportService dbImportService;
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(CardsApplication.class);
@@ -30,7 +33,9 @@ public class CardsApplication implements CommandLineRunner {
             System.out.println("Select: ");
             System.out.println("  1. Search for cards");
             System.out.println("  2. ReIndex data");
-            System.out.println("  3. Quit");
+            System.out.println("  3. Import Owned cards");
+            System.out.println("  4. Import All cards");
+            System.out.println("  9 to Quit");
             int n = readInput.nextInt();
             switch(n){
                 case 1:
@@ -48,12 +53,22 @@ public class CardsApplication implements CommandLineRunner {
                     String colors = readInput.nextLine();
                     System.out.print("Set Name: ");
                     String setName = readInput.nextLine();
+                    System.out.println("");
                     cardSearchService.getluceneCards(name, text, type, colors, setName);
                     break;
                 case 2:
                     System.out.println(cardSearchService.reloadIndex());
                     break;
                 case 3:
+                    String fileName = readInput.nextLine();
+                    System.out.print("Enter filename to import: ");
+                    fileName = readInput.nextLine();
+                    dbImportService.importOwnedCsv(fileName);
+                    break;
+                case 4:
+                    dbImportService.importDb();
+                    break;
+                case 9:
                     done = true;
                 default:
             }

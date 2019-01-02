@@ -6,17 +6,14 @@
 package com.tantech.cards.search;
 
 import com.tantech.cards.db.Card;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortedSetSortField;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projections;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.BooleanJunction;
@@ -150,17 +147,26 @@ public class CardSearchService {
             
             List<Card> cardLst = jpaQuery.getResultList();
             
+//            List<Card> uniqueCardLst = cardLst.stream().distinct().collect(Collectors.toList());
+            Set<String> nameSet = new HashSet<>();
+            List<Card> uniqueCardLst = cardLst.stream().filter(e -> nameSet.add(e.getName()))
+                        .collect(Collectors.toList());
             
-            
-            for(Card card:cardLst){
-                System.out.println("Card name: "+card.getName());
-                System.out.println("Card text: "+card.getText());
-                System.out.println("Card set: "+card.getMtgSet().getName());
-                System.out.println("Card type: "+card.getType());
-                System.out.println("Colors: "+card.getColors());
-                System.out.println("");
+            System.out.println("");
+            System.out.println("name,text,set,type,colors,mana cost,power,toughness");
+            for(Card card:uniqueCardLst){
+//                System.out.println("Card name: "+card.getName());
+//                System.out.println("Card text: "+card.getText());
+//                System.out.println("Card set: "+card.getMtgSet().getName());
+//                System.out.println("Card type: "+card.getType());
+//                System.out.println("Colors: "+card.getColors());
+//                System.out.println("Mana cost: "+card.getManaCost());
+//                System.out.println("Power/Toughness: "+card.getPower()+"/"+card.getToughness());
+//                System.out.println("");
+                System.out.println("\""+card.getName()+"\",\""+card.getText()+"\",\""+card.getMtgSet().getName()+"\",\""+ 
+                    card.getType()+"\",\""+card.getColors()+"\","+card.getManaCost()+","+card.getPower()+","+card.getToughness());
             } 
-            System.out.println("Total: "+cardLst.size());
+            System.out.println("Total: "+uniqueCardLst.size());
             
             return "Search complete";
 	}

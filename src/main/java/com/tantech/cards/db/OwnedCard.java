@@ -30,6 +30,10 @@ public class OwnedCard {
     @GeneratedValue(strategy=GenerationType.AUTO) 
     private Integer ownedId;
     
+//    @CsvBindByName(column = "Name")
+    
+//    @CsvBindAndJoinByName(column = "Name\\|Set", elementType = Card.class, 
+//            converter = CsvTextToCard.class, required = true)
     @ManyToOne
     @JoinColumn(name="cardId")
     @JsonIdentityInfo(
@@ -37,8 +41,19 @@ public class OwnedCard {
       property = "cardId")
     private Card cardMaster;
     
+//    @CsvBindByName(column = "Set")
+//    @CsvCustomBindByName(column = "Name", converter = CsvTextToCard.class)
+    @ManyToOne
+    @JoinColumn(name="setId")
+    @JsonIdentityInfo(
+      generator = ObjectIdGenerators.PropertyGenerator.class, 
+      property = "setId")
+    private MTGSet setName;
+    
     private String cardLocation;
     private boolean foil;
+    
+//    @CsvBindByName(column = "Condition")
     private String cardCondition;
     private Integer cardStars;
     private String notes;
@@ -47,6 +62,8 @@ public class OwnedCard {
     @Temporal(TIMESTAMP)
     private Date dateAdded = new Date();
     
+//    @CsvBindByName(column = "Price Each")
+//    @CsvNumber("$#.##")
     private Float pricePaid;
 
     public Float getPricePaid() {
@@ -88,6 +105,16 @@ public class OwnedCard {
     public void setCardMaster(Card card) {
         this.cardMaster = card;
     }
+
+    public MTGSet getSetName() {
+        return setName;
+    }
+
+    public void setSetName(MTGSet setName) {
+        this.setName = setName;
+    }
+    
+    
 
     public String getCardLocation() {
         return cardLocation;
