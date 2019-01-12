@@ -32,40 +32,89 @@
                                 <TablePane.Column width="1*" />
                             </columns>  
                             <TablePane.Row height="4*">
-                                <FillPane>
-                                    <Border styles="{backgroundColor:'#FFFF00', padding:4, cornerRadii:10}">
-                                        <ScrollPane horizontalScrollBarPolicy="fill_to_capacity"
-                                                    verticalScrollBarPolicy="fill_to_capacity">
-                                            <StackPane>
-                                                <TableView bxml:id="cardsTableView">
-                                                    <columns>
-                                                        <TableView.Column name="name" width="180" headerData="Name"/>
-                                                        <TableView.Column name="setName" width="180" headerData="Set Name"/>
-                                                        <TableView.Column name="multiverseid" width="80" headerData="Multiverse ID"/>
-                                                        <TableView.Column name="manaCost" width="80" headerData="Mana Cost"/>
-                                                        <TableView.Column name="type" width="180" headerData="Type"/>
-                                                        <TableView.Column name="rarity" width="80" headerData="Rarity"/>
-                                                        <TableView.Column name="colors" width="80" headerData="Colors"/>
-                                                        <TableView.Column name="power" width="60" headerData="Power"/>
-                                                        <TableView.Column name="toughness" width="70" headerData="Toughness"/>
-                                                    </columns>
+                                <TabPane bxml:id="tabPane">
+                                    <corner>
+                                        <BoxPane bxml:id="cornerBoxPane" styles="{horizontalAlignment:'right'}">
+                                            <TextInput textSize="10"/>
+                                        </BoxPane>
+                                    </corner>
+                                    <FillPane>
+                                        <TabPane.tabData>
+                                            <content:ButtonData icon="@cup.png"
+                                                text="All Cards"/>
+                                        </TabPane.tabData>
+                                        <Border styles="{backgroundColor:'#FFFF00', padding:4, cornerRadii:10}">
+                                            <ScrollPane horizontalScrollBarPolicy="fill_to_capacity"
+                                                        verticalScrollBarPolicy="fill_to_capacity">
+                                                <StackPane>
+                                                    <TableView bxml:id="cardsTableView">
+                                                        <columns>
+                                                            <TableView.Column name="name" width="180" headerData="Name"/>
+                                                            <TableView.Column name="setName" width="180" headerData="Set Name"/>
+                                                            <TableView.Column name="multiverseid" width="80" headerData="Multiverse ID"/>
+                                                            <TableView.Column name="manaCost" width="80" headerData="Mana Cost"/>
+                                                            <TableView.Column name="type" width="180" headerData="Type"/>
+                                                            <TableView.Column name="rarity" width="80" headerData="Rarity"/>
+                                                            <TableView.Column name="colors" width="80" headerData="Colors"/>
+                                                            <TableView.Column name="power" width="60" headerData="Power"/>
+                                                            <TableView.Column name="toughness" width="70" headerData="Toughness"/>
+                                                        </columns>
 
-                                                    <tableViewSortListeners>
-                                                        <![CDATA[
-                                                        function sortChanged(cardsTableView) {
-                                                            var tableData = cardsTableView.getTableData();
-                                                            tableData.setComparator(new org.apache.pivot.wtk.content.TableViewRowComparator(cardsTableView));
-                                                        }
-                                                        ]]>
-                                                    </tableViewSortListeners>
-                                                </TableView>
-                                            </StackPane>
-                                            <columnHeader>
-                                                <TableViewHeader tableView="$cardsTableView" sortMode="single_column"/>
-                                            </columnHeader>
-                                        </ScrollPane>                                          
-                                    </Border>
-                                </FillPane>
+                                                        <tableViewSortListeners>
+                                                            <![CDATA[
+                                                            function sortChanged(cardsTableView) {
+                                                                var tableData = cardsTableView.getTableData();
+                                                                tableData.setComparator(new org.apache.pivot.wtk.content.TableViewRowComparator(cardsTableView));
+                                                            }
+                                                            ]]>
+                                                        </tableViewSortListeners>
+                                                    </TableView>
+                                                </StackPane>
+                                                <columnHeader>
+                                                    <TableViewHeader tableView="$cardsTableView" sortMode="single_column"/>
+                                                </columnHeader>
+                                            </ScrollPane>                                          
+                                        </Border>
+                                    </FillPane>
+                                    <FillPane>
+                                        <TabPane.tabData>
+                                            <content:ButtonData icon="@anchor.png"
+                                                text="Owned Cards"/>
+                                        </TabPane.tabData>
+                                        <Border styles="{backgroundColor:'#FFFF00', padding:4, cornerRadii:10}">
+                                            <ScrollPane horizontalScrollBarPolicy="fill_to_capacity"
+                                                        verticalScrollBarPolicy="fill_to_capacity">
+                                                <StackPane>
+                                                    <TableView bxml:id="ownedTableView">
+                                                        <columns>
+                                                            <TableView.Column name="name" width="180" headerData="Owned Name"/>
+                                                            <TableView.Column name="setName" width="180" headerData="Set Name"/>
+                                                            <TableView.Column name="multiverseid" width="80" headerData="Multiverse ID"/>
+                                                            <TableView.Column name="manaCost" width="80" headerData="Mana Cost"/>
+                                                            <TableView.Column name="type" width="180" headerData="Type"/>
+                                                            <TableView.Column name="rarity" width="80" headerData="Rarity"/>
+                                                            <TableView.Column name="colors" width="80" headerData="Colors"/>
+                                                            <TableView.Column name="power" width="60" headerData="Power"/>
+                                                            <TableView.Column name="toughness" width="70" headerData="Toughness"/>
+                                                        </columns>
+
+                                                        <tableViewSortListeners>
+                                                            <![CDATA[
+                                                            function sortChanged(cardsTableView) {
+                                                                var tableData = ownedTableView.getTableData();
+                                                                tableData.setComparator(new org.apache.pivot.wtk.content.TableViewRowComparator(ownedTableView));
+                                                            }
+                                                            ]]>
+                                                        </tableViewSortListeners>
+                                                    </TableView>
+                                                </StackPane>
+                                                <columnHeader>
+                                                    <TableViewHeader tableView="$ownedTableView" sortMode="single_column"/>
+                                                </columnHeader>
+                                            </ScrollPane>                                          
+                                        </Border>
+                                    </FillPane>
+                                </TabPane>
                             </TablePane.Row>
                             <TablePane.Row height="-1">
                                 <BoxPane orientation="vertical">
@@ -83,6 +132,9 @@
                                                 </BoxPane>
                                                 <BoxPane Form.label="Colors">
                                                     <TextInput bxml:id="colorsSearch" prompt="" textSize="64"/>
+                                                </BoxPane>
+                                                <BoxPane>
+                                                    <Checkbox bxml:id="owned" buttonData="Search Owned" />
                                                 </BoxPane>
                                                 <BoxPane>
                                                     <PushButton bxml:id="searchButton" buttonData="Submit" />

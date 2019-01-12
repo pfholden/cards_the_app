@@ -150,7 +150,7 @@ public class CardSearchService {
         return uniqueCardLst;
     }
 
-     public String searchOwnedCards(String name, String text, String type, String colors, String setname) {
+     public List<OwnedCard> searchOwnedCards(String name, String text, String type, String colors, String setname) {
  
         FullTextEntityManager fullTextEntityManager 
             = Search.getFullTextEntityManager(entityManager);
@@ -162,33 +162,44 @@ public class CardSearchService {
 //        org.apache.lucene.search.Sort sort = new Sort(new SortedSetSortField("cardmaster.sortName", false));
 
         BooleanJunction mj = queryBuilder.bool();
+        boolean first = true;
         
         if (!name.isEmpty()) {
             mj.must(queryBuilder.simpleQueryString()
                                 .onField("cardMaster.name").matching(name).createQuery());
+            first = false;
             System.out.println("Added name: "+name);
         }
         if (!text.isEmpty()) {
             mj.must(queryBuilder.simpleQueryString()
                                 .onField("cardMaster.text").matching(text).createQuery());
+            first = false;
             System.out.println("Added text: "+text);
         }
         if (!type.isEmpty()) {
             mj.must(queryBuilder.simpleQueryString()
                                 .onField("cardMaster.type").matching(type).createQuery());
+            first = false;
             System.out.println("Added type: "+type);
         }
         if (!colors.isEmpty()) {
             mj.must(queryBuilder.simpleQueryString()
                                 .onField("cardMaster.colors").matching(colors).createQuery());
+            first = false;
             System.out.println("Added colors: "+colors);
         }
         if (!setname.isEmpty()) {
             mj.must(queryBuilder.simpleQueryString()
                                 .onField("setName.name").matching(setname).createQuery());
+            first = false;
             System.out.println("Added setname: "+setname);
         }
 
+        //If first still set all query values are empty. Just return all cards.
+        if (first){
+            mj.must(queryBuilder.all().createQuery());
+        }
+        
         org.hibernate.search.jpa.FullTextQuery jpaQuery
             = fullTextEntityManager.createFullTextQuery(mj.createQuery(), OwnedCard.class);
 
@@ -198,29 +209,29 @@ public class CardSearchService {
 
         List<OwnedCard> cardLst = jpaQuery.getResultList();
         
-        for(OwnedCard card:cardLst){
-            System.out.println("Name: "+card.getCardMaster().getName());
-            System.out.println("Text: "+card.getCardMaster().getText());
-            System.out.println("Card type: "+card.getCardMaster().getType());
-            System.out.println("Mana Cost: "+card.getCardMaster().getManaCost());
-            System.out.println("Colors: "+card.getCardMaster().getColors());
-            System.out.println("Power/Toughness: "+card.getCardMaster().getPower()+"/"+card.getCardMaster().getToughness());
-            System.out.println("Set: "+card.getSetName().getName());
-            System.out.println("Condition: "+card.getCardCondition());
-            System.out.println("Location: "+card.getCardLocation());
-            System.out.println("Stars: "+card.getCardStars());
-            System.out.println("Price paid: "+card.getPricePaid());
-            System.out.println("");
-        }
+//        for(OwnedCard card:cardLst){
+//            System.out.println("Name: "+card.getCardMaster().getName());
+//            System.out.println("Text: "+card.getCardMaster().getText());
+//            System.out.println("Card type: "+card.getCardMaster().getType());
+//            System.out.println("Mana Cost: "+card.getCardMaster().getManaCost());
+//            System.out.println("Colors: "+card.getCardMaster().getColors());
+//            System.out.println("Power/Toughness: "+card.getCardMaster().getPower()+"/"+card.getCardMaster().getToughness());
+//            System.out.println("Set: "+card.getSetName().getName());
+//            System.out.println("Condition: "+card.getCardCondition());
+//            System.out.println("Location: "+card.getCardLocation());
+//            System.out.println("Stars: "+card.getCardStars());
+//            System.out.println("Price paid: "+card.getPricePaid());
+//            System.out.println("");
+//        }
         
-        return "Success";
+        return cardLst;
      }
     
     public String reloadIndex() throws InterruptedException {
        
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
 
-        fullTextEntityManager.createIndexer().startAndWait();
+        fullTextEntityManager.createIndexer().start();
 
         return "Indexing Completed";
     }

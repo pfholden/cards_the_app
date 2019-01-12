@@ -6,6 +6,7 @@
 package com.tantech.cards.ui;
 
 import com.tantech.cards.db.Card;
+import com.tantech.cards.db.OwnedCard;
 import com.tantech.cards.search.CardSearchService;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,6 +21,10 @@ import org.apache.pivot.collections.Sequence;
 import org.apache.pivot.util.Resources;
 import org.apache.pivot.wtk.Action;
 import org.apache.pivot.wtk.Alert;
+import org.apache.pivot.wtk.ApplicationContext;
+import org.apache.pivot.wtk.Button;
+import org.apache.pivot.wtk.ButtonStateListener;
+import org.apache.pivot.wtk.Checkbox;
 import org.apache.pivot.wtk.Component;
 import org.apache.pivot.wtk.ComponentKeyListener;
 import org.apache.pivot.wtk.ImageView;
@@ -30,6 +35,7 @@ import org.apache.pivot.wtk.Prompt;
 import org.apache.pivot.wtk.PushButton;
 import org.apache.pivot.wtk.Span;
 import org.apache.pivot.wtk.SuggestionPopup;
+import org.apache.pivot.wtk.TabPane;
 import org.apache.pivot.wtk.TableView;
 import org.apache.pivot.wtk.TableViewSelectionListener;
 import org.apache.pivot.wtk.TextInput;
@@ -50,7 +56,10 @@ public class AppWindowUI extends Window implements Bindable {
     @BXML private TextInput textSearch;
     @BXML private TextInput typeSearch;
     @BXML private TextInput colorsSearch;
+    @BXML private Checkbox owned;
     @BXML private TableView cardsTableView;
+    @BXML private TableView ownedTableView;
+    @BXML private TabPane tabPane;
     
     private static AppWindowUI instance;
     private ImageView origImageView;
@@ -78,6 +87,37 @@ public class AppWindowUI extends Window implements Bindable {
             cardNames.add(card.getName());
         }
     }
+    
+    private void displayCardsFound(int number){
+        Prompt prompt = new Prompt();
+        prompt.setMessage("Cards found: "+number);
+        prompt.open(instance.getWindow());
+        ApplicationContext.scheduleCallback(new Runnable() {
+            @Override
+            public void run() {
+                prompt.close();                    
+            }
+        }, 2000);
+    }
+    
+    private void displaySingleCard(Card card) {
+        String cardTextDisplay = null;
+        if(card.getName() != null) cardTextDisplay = card.getName();
+        if(card.getText() != null) cardTextDisplay = cardTextDisplay+"\n\n"+card.getText();
+        if (card.getFlavor() != null ) cardTextDisplay = cardTextDisplay+"\n\n"+card.getFlavor();
+        cardText.setText(cardTextDisplay);
+        if (card.getImageUrl() != null){
+            URL imageUrl = null;
+            try {
+                imageUrl = new URL(card.getImageUrl());
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(AppWindowUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            cardImageView.setImage(imageUrl);
+        } else {
+            cardImageView.clearImage();
+        }
+    }
   
      // Action invoked to run search queary
     private Action searchAction = new Action(false) {
@@ -86,8 +126,6 @@ public class AppWindowUI extends Window implements Bindable {
         public void perform(Component source) {
             
             
-            List<Card> cards = new ArrayList<Card>();   
-            java.util.List<Card> cardsTempList;
             String nameSearchStr = nameSearch.getText();
             String textSearchStr = textSearch.getText();
             String typeSearchStr = typeSearch.getText();
@@ -95,50 +133,44 @@ public class AppWindowUI extends Window implements Bindable {
             
             nameSearchStr=nameSearchStr.replace(" ", "+");
             
-//            String searchStr = null;
-//            boolean first = false;
-//            
-//            if (nameSearchStr != null ) {
-//                first = true;
-//                searchStr = "name="+nameSearchStr;
-//            }
-//            if (textSearchStr != null ) {                
-//                if (first){
-//                    searchStr = searchStr + "&" + "text=" + textSearchStr;
-//                } else {
-//                    first = true;
-//                    searchStr = "text=" + textSearchStr;
-//                }
-//            }
-            
-//            cardsTempList = CardAPI.getAllCards(Arrays.asList(searchStr));
-//                System.out.print(cardsTempList.toString());
-            cardsTempList = cardSearchService.searchCards(nameSearchStr, textSearchStr, typeSearchStr, 
-                    colorsSearchStr, "");
-            for(Card card:cardsTempList){
-                cards.add(card);
+            if (owned.getState() == Button.State.SELECTED){
+                java.util.List<OwnedCard> cardsTempList = cardSearchService.searchOwnedCards(nameSearchStr, textSearchStr, typeSearchStr, 
+                        colorsSearchStr, "");
+                List<Card> cards = new ArrayList<>();  
+                for(OwnedCard ownedCard:cardsTempList){
+                    cards.add(ownedCard.getCardMaster());
+                }
+                ownedTableView.setTableData(cards);
+                if (cards.getLength() == 1){
+                    displaySingleCard(cards.get(0));
+                }else{
+                    cardImageView.clearImage();
+                    cardText.setText("");
+                }
+                displayCardsFound(cards.getLength());
+                tabPane.setSelectedIndex(1);
+            }else{
+                java.util.List<Card> cardsTempList = cardSearchService.searchCards(nameSearchStr, textSearchStr, typeSearchStr, 
+                        colorsSearchStr, "");
+                List<Card> cards = new ArrayList<>();  
+                for(Card card:cardsTempList){
+                    cards.add(card);
+                }
+                cardsTableView.setTableData(cards);
+                if (cards.getLength() == 1){
+                    displaySingleCard(cards.get(0));
+                }else{
+                    cardImageView.clearImage();
+                    cardText.setText("");
+                }
+                displayCardsFound(cards.getLength());
+                tabPane.setSelectedIndex(0);
             }
-            cardsTableView.setTableData(cards);
+            
             nameSearch.setText("");
             textSearch.setText("");
             typeSearch.setText("");
             colorsSearch.setText("");
-            
-            if (cards.getLength() == 1){
-                URL imageUrl;
-                if (cards.get(0).getImageUrl() != "-1"){
-                    try {
-                        imageUrl = new URL(cards.get(0).getImageUrl());
-                        cardImageView.setImage(imageUrl);
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(AppWindowUI.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                cardText.setText(cards.get(0).getText());
-            }else{
-                cardImageView.clearImage();
-                cardText.setText("");
-            }
             
 //            ArrayList<String> options = new ArrayList<String>();
 //            options.add("OK");
@@ -149,7 +181,7 @@ public class AppWindowUI extends Window implements Bindable {
 //            prompt.getDecorators().update(0, new ReflectionDecorator());
 //            prompt.open(instance.getWindow());
             
-            Prompt.prompt(MessageType.INFO, "Cards found: "+cards.getLength(), instance.getWindow());
+            
         }
     };
     private Action addAction = new Action(false) {
@@ -160,12 +192,13 @@ public class AppWindowUI extends Window implements Bindable {
             Alert cardAdded = new Alert();
             cardAdded.setMessage("Card added");
             cardAdded.open( instance.getWindow());
-//            try { 
-//                Thread.sleep(2000);
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(CAppWindowUI.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-            cardAdded.close();
+            ApplicationContext.scheduleCallback(new Runnable() {
+                @Override
+                public void run() {
+                    cardAdded.close();                    
+                }
+            }, 2000);
+            
         }
     };
  
@@ -184,6 +217,26 @@ public class AppWindowUI extends Window implements Bindable {
 
                     if (firstSelectedIndex == lastSelectedIndex) {
                         List<Card> tableData = (List<Card>)cardsTableView.getTableData();
+                        card = tableData.get(firstSelectedIndex);
+                        displaySingleCard(card);
+                        addAction.setEnabled(true);
+                    } 
+                
+                }
+            };
+        });
+        
+        ownedTableView.getTableViewSelectionListeners().add(new TableViewSelectionListener.Adapter() {
+            Card card = null;
+            
+            @Override
+            public void selectedRangesChanged(TableView tableView, Sequence<Span> previousSelectedRanges) {
+                int firstSelectedIndex = ownedTableView.getFirstSelectedIndex();
+                if (firstSelectedIndex != -1) {
+                    int lastSelectedIndex = ownedTableView.getLastSelectedIndex();
+
+                    if (firstSelectedIndex == lastSelectedIndex) {
+                        List<Card> tableData = (List<Card>)ownedTableView.getTableData();
                         card = tableData.get(firstSelectedIndex);
                         try {
                         String cardTextDisplay = null;
@@ -310,6 +363,14 @@ public class AppWindowUI extends Window implements Bindable {
             }
         });
         
+        ButtonStateListener checkboxStateListener = new ButtonStateListener() {
+            @Override
+            public void stateChanged(Button button, Button.State previousState) {
+                 searchAction.setEnabled(true);
+            }
+        };
+
+        owned.getButtonStateListeners().add(checkboxStateListener);
         searchButton.setAction(searchAction);
         addButton.setAction(addAction);
     }
@@ -320,16 +381,23 @@ public class AppWindowUI extends Window implements Bindable {
         Action.getNamedActions().put("reIndex", new Action() {
             @Override
             public void perform(Component source) {
+//                ApplicationContext.queueCallback(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            cardSearchService.reloadIndex();
+//                        } catch (InterruptedException ex) {
+//                            Logger.getLogger(AppWindowUI.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                    }
+//                });
                 try {
-                    // Needs to be started on a background thread
                     cardSearchService.reloadIndex();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(AppWindowUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
             }
         });
-    }
-    
+    }    
 }
  
