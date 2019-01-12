@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<window:AppWindowUI title="Cards: The App" 
+        maximized="true"
+        xmlns:bxml="http://pivot.apache.org/bxml"    
+        xmlns:content="org.apache.pivot.wtk.content"
+        xmlns:window="com.tantech.cards.ui"
+        xmlns="org.apache.pivot.wtk"
+        >
+
+    <Border styles="{backgroundColor:10, thickness:1, padding:4, cornerRadii:10}">
+        <TablePane styles="{backgroundColor:'#FFFFFF', showVerticalGridLines:true}">
+            <columns>
+                <TablePane.Column width="1*" />
+            </columns>
+            <TablePane.Row height="-1">
+                <FillPane>
+                    <Border styles="{padding:4, cornerRadii:10}">
+                        <bxml:include src="menu_bar.bxml" inline="true"/>
+                    </Border>
+                </FillPane>
+            </TablePane.Row>
+            <TablePane.Row height="4*">
+                <TablePane styles="{backgroundColor:'#FFFFFF', showVerticalGridLines:true}">
+                    <columns>
+                        <TablePane.Column width="1*" />
+                        <TablePane.Column width="-1" />
+                    </columns>
+                    <TablePane.Row height="4*">
+                        <TablePane>
+                           <columns>
+                                <TablePane.Column width="1*" />
+                            </columns>  
+                            <TablePane.Row height="4*">
+                                <FillPane>
+                                    <Border styles="{backgroundColor:'#FFFF00', padding:4, cornerRadii:10}">
+                                        <ScrollPane horizontalScrollBarPolicy="fill_to_capacity"
+                                                    verticalScrollBarPolicy="fill_to_capacity">
+                                            <StackPane>
+                                                <TableView bxml:id="cardsTableView">
+                                                    <columns>
+                                                        <TableView.Column name="name" width="180" headerData="Name"/>
+                                                        <TableView.Column name="setName" width="180" headerData="Set Name"/>
+                                                        <TableView.Column name="multiverseid" width="80" headerData="Multiverse ID"/>
+                                                        <TableView.Column name="manaCost" width="80" headerData="Mana Cost"/>
+                                                        <TableView.Column name="type" width="180" headerData="Type"/>
+                                                        <TableView.Column name="rarity" width="80" headerData="Rarity"/>
+                                                        <TableView.Column name="colors" width="80" headerData="Colors"/>
+                                                        <TableView.Column name="power" width="60" headerData="Power"/>
+                                                        <TableView.Column name="toughness" width="70" headerData="Toughness"/>
+                                                    </columns>
+
+                                                    <tableViewSortListeners>
+                                                        <![CDATA[
+                                                        function sortChanged(cardsTableView) {
+                                                            var tableData = cardsTableView.getTableData();
+                                                            tableData.setComparator(new org.apache.pivot.wtk.content.TableViewRowComparator(cardsTableView));
+                                                        }
+                                                        ]]>
+                                                    </tableViewSortListeners>
+                                                </TableView>
+                                            </StackPane>
+                                            <columnHeader>
+                                                <TableViewHeader tableView="$cardsTableView" sortMode="single_column"/>
+                                            </columnHeader>
+                                        </ScrollPane>                                          
+                                    </Border>
+                                </FillPane>
+                            </TablePane.Row>
+                            <TablePane.Row height="-1">
+                                <BoxPane orientation="vertical">
+                                    <Border styles="{cornerRadii:10}">
+                                        <Form>
+                                            <Form.Section heading="Search">
+                                                <BoxPane bxml:id="cardBoxPane" Form.label=" Name">
+                                                    <TextInput bxml:id="nameSearch" prompt="" textSize="64"/>
+                                                </BoxPane>
+                                                <BoxPane Form.label="Text">
+                                                    <TextInput bxml:id="textSearch" prompt="" textSize="64"/>
+                                                </BoxPane>
+                                                <BoxPane Form.label="Type">
+                                                    <TextInput bxml:id="typeSearch" prompt="" textSize="64"/>
+                                                </BoxPane>
+                                                <BoxPane Form.label="Colors">
+                                                    <TextInput bxml:id="colorsSearch" prompt="" textSize="64"/>
+                                                </BoxPane>
+                                                <BoxPane>
+                                                    <PushButton bxml:id="searchButton" buttonData="Submit" />
+                                                </BoxPane>
+                                            </Form.Section>
+                                        </Form>
+                                    </Border>
+                                </BoxPane>                                   
+                            </TablePane.Row>
+                        </TablePane>
+                        <TablePane>
+                            <columns>
+                                <TablePane.Column width="-1" />
+                            </columns>  
+                            <TablePane.Row height="-1">
+                                <FillPane>
+                                    <Border styles="{backgroundColor:'#FFFFFF', padding:4, cornerRadii:10}">
+                                        <ImageView bxml:id="cardImageView" preferredWidth="230" preferredHeight="320"/>
+                                    </Border>
+                                </FillPane>
+                            </TablePane.Row>
+                            <TablePane.Row  height="1*">
+                                <ScrollPane preferredWidth="80" preferredHeight="110"
+                                            horizontalScrollBarPolicy="fill"
+                                            verticalScrollBarPolicy="fill_to_capacity">
+                                    <Border styles="{backgroundColor:'#FFFF00', padding:4, cornerRadii:10}">
+                                        <BoxPane orientation="vertical" styles="{fill:true,
+                                                    padding:{top:2, left:4, bottom:8, right:4}}">
+                                            <Label bxml:id="cardText" styles="{font:'Arial bold 12', color:'#000000', 
+                                                 wrapText:true}"/>
+                                        </BoxPane>
+                                    </Border>
+                                </ScrollPane>
+                            </TablePane.Row>
+                            <TablePane.Row height="-1">
+                                <PushButton bxml:id="addButton" buttonData="Add as Owned" />
+                            </TablePane.Row>
+                        </TablePane>                  
+                    </TablePane.Row>       
+                </TablePane>
+            </TablePane.Row>
+        </TablePane>
+    </Border>
+</window:AppWindowUI>
+
+

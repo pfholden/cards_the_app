@@ -28,16 +28,19 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
@@ -57,7 +60,9 @@ import org.hibernate.search.annotations.Store;
 )
 @JsonIgnoreProperties
 @JsonRootName(value = "cards")
-public class Card implements Serializable{
+//public class Card implements Serializable{
+public class Card{
+
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO) 
     private Integer cardId;
@@ -70,7 +75,7 @@ public class Card implements Serializable{
     @SortableField (forField = "sortName")
     private String name;
     
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "other_names", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "other_names")
     private Set<String> names = new HashSet<>();
@@ -82,14 +87,14 @@ public class Card implements Serializable{
 //  On simple collections, add @Field with a name. This name can then be used in the search query.
     @IndexedEmbedded
     @Field(name="colors")
-    @ElementCollection
+    @ElementCollection (fetch = FetchType.EAGER)
     @CollectionTable(name = "card_colors", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "color")
     private Set<String> colors = new HashSet<>();
 
 //    @Field
     @IndexedEmbedded
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "colorIdentities", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "colorIdentity")
     private Set<String> colorIdentity = new HashSet<>();
@@ -99,21 +104,21 @@ public class Card implements Serializable{
     
 //    @Field
     @IndexedEmbedded
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "supertypes", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "supertype")
     private Set<String> supertypes = new HashSet<>();
     
 //    @Field
     @IndexedEmbedded
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "types", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "type")
     private Set<String> types = new HashSet<>();
     
 //    @Field
     @IndexedEmbedded
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "subtypes", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "subtype")
     private Set<String> subtypes = new HashSet<>();
@@ -167,6 +172,21 @@ public class Card implements Serializable{
 //	private BigDecimal onlinePriceMid;
 //	private BigDecimal onlinePriceLow;
 //	private Ruling[] rulings;
+
+// mappedBy needs to be set to the field name from the other side of the relationship.    
+    @OneToMany(mappedBy="cardMaster", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class, 
+//        property = "ownedId")
+    private Set<OwnedCard> cardOwned;
+
+    public Set<OwnedCard> getCardOwned() {
+        return cardOwned;
+    }
+
+    public void setCardOwned(Set<OwnedCard> cardOwned) {
+        this.cardOwned = cardOwned;
+    }
 
     public Integer getCardId() {
             return cardId;

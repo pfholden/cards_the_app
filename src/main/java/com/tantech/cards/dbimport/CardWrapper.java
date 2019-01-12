@@ -30,10 +30,8 @@ public class CardWrapper {
         Integer i=1;
     
          for (Card importCard:cards){
-            System.out.println(i++);
+//            System.out.println(i++);
             
-          
-
             MTGSet setRead = setRepo.findByName(importCard.getSetName());
 
             if ( setRead == null){
@@ -43,11 +41,9 @@ public class CardWrapper {
                 setRepo.save(setRead);
                 importCard.setMtgSet(setRead);
                 cardRepo.save(importCard);
-//                    returnStr = "Set and Card added";
             } else if (cardRepo.findByNameAndMtgSet(importCard.getName(), setRead) == null){
                 importCard.setMtgSet(setRead);
-                cardRepo.save(importCard);   
-//                    returnStr += "Card added";
+                cardRepo.save(importCard);  
             }   
         }
     }

@@ -8,7 +8,6 @@ package com.tantech.cards.dbimport;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.tantech.cards.db.Card;
 import com.tantech.cards.db.CardRepository;
-import com.tantech.cards.db.MTGSet;
 import com.tantech.cards.db.MTGSetRepository;
 import com.tantech.cards.db.OwnedCard;
 import com.tantech.cards.db.OwnedCardRepository;
@@ -31,31 +30,42 @@ public class DbImportService {
     @Autowired
     private OwnedCardRepository ownedRepository;
     
-    
     public String importOwnedCsv (String csvFile) throws FileNotFoundException, IOException{
         
-        List<OwnedWrapper> cardBeans = new CsvToBeanBuilder(new FileReader(csvFile)).withType(OwnedWrapper.class).build().parse();
+        List<TCGImportWrapper> cardBeans = new CsvToBeanBuilder(new FileReader(csvFile)).withType(TCGImportWrapper.class).build().parse();
         
         Integer i = 1;
-        for(OwnedWrapper importCard:cardBeans){
-////            System.out.println("Name: "+ownedCard.getCardMaster().getName());
-//            System.out.println("Condition: "+ownedCard.getCardCondition());
-//            System.out.println("Price Paid: "+ownedCard.getPricePaid());
-//            ownedRepository.save(ownedCard);
-            
-            OwnedCard myCard = new OwnedCard();
-//            \(([^\)]+)\)
-            String newSetCode = importCard.getSetCode();
-            System.out.println(i++ + ":" + importCard.getName() + "-" + newSetCode);
-            Card newCardMaster = cardRepository.findByNameAndSetCode(importCard.getName(), importCard.getSetCode());
-            myCard.setSetName(setRepository.findByCode(newSetCode));
-            myCard.setCardMaster(newCardMaster);
-//            myCard.setCardMaster(cardRepository.findByNameAndMtgSet(importCard.getName(), 
-//                   myCard.getSetName()));
-            myCard.setCardCondition(importCard.getCardCondition());
-            myCard.setFoil(importCard.getPrinting().equalsIgnoreCase("foil"));
-            myCard.setPricePaid(importCard.getPricePaid());
-            ownedRepository.save(myCard);
+        for(TCGImportWrapper importCard:cardBeans){
+            for(int qty=0;qty<importCard.getQuantity();qty++){
+                OwnedCard myCard = new OwnedCard();
+                String newSetCode = importCard.getSetCode();
+                System.out.print(i++ + ": Adding " + importCard.getName() + "-" + newSetCode);
+                Card newCardMaster = cardRepository.findByNameAndSetCode(importCard.getName(), newSetCode);
+
+                boolean done = false;
+                if(newCardMaster == null && !done){
+                    // Try other options
+                    // Try first by Set Code and Card Number
+                    newCardMaster = cardRepository.findBySetCodeAndNumber(newSetCode, importCard.getCardNumber());
+                    if (newCardMaster == null){
+                        // Other options will go here later. Need to figure out how to 
+                        // import split cards
+                        done = true;
+                    }
+                }                
+                
+                if (newCardMaster != null){
+                    myCard.setSetName(setRepository.findByCode(newSetCode));
+                    myCard.setCardMaster(newCardMaster);
+                    myCard.setCardCondition(importCard.getCardCondition());
+                    myCard.setFoil(importCard.getPrinting().equalsIgnoreCase("foil"));
+                    myCard.setPricePaid(importCard.getPricePaid());
+                    ownedRepository.save(myCard);
+                    System.out.println(" - Done!");
+                } else {
+                    System.out.println(" - *** Card not in DB, not added");
+                }
+            }
         }
         return "Success";
     }
@@ -63,6 +73,8 @@ public class DbImportService {
     public void importDb() throws IOException{
         
         getAllCards(setRepository, cardRepository);
+        
+        
 //            List<CardWrapper> allCardWrappers = getAllCards();
 //            Integer i=1;
 //            for (CardWrapper newCards:allCardWrappers){

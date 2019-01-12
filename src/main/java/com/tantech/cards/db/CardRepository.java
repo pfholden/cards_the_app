@@ -27,17 +27,5 @@ public interface CardRepository extends CrudRepository<Card, Integer> {
     
     public Card findByNameAndSetCode(String name, String setCode);
     
-//    public List<Card> findByNameContaining(String name);
-//    
-//    public List<Card> findByNameContainingAndTextContaining(String name, String text);
-//    
-//    public List<Card> findByNameContainingAndTextContainingAndTypeContaining(String name, String text, String type);
-//    
-//    public List<Card> findByNameContainingAndTextContainingAndTypeContainingAndPowerBetweenAndToughnessBetweenAndCmcBetweenAndSetNameIn(
-//            String name, String text, String type, Integer powerMin, Integer powerMax, Integer toughnessMin, 
-//            Integer toughnessMax, Integer cmcMin, Integer cmcMax, Collection<String> setName);
-//    
-    
-    
-
+    public Card findBySetCodeAndNumber(String setCode, String cardNumber);
 }
