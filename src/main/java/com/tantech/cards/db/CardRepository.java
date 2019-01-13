@@ -12,6 +12,9 @@ package com.tantech.cards.db;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Set;
+import java.util.List;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
 // CRUD refers Create, Read, Update, Delete
@@ -28,4 +31,7 @@ public interface CardRepository extends CrudRepository<Card, Integer> {
     public Card findByNameAndSetCode(String name, String setCode);
     
     public Card findBySetCodeAndNumber(String setCode, String cardNumber);
+    
+    @Query("select distinct u.name from Card u ")
+    List<String> findByAsArrayAndSort(Sort sort);
 }

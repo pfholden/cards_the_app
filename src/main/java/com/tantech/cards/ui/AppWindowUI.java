@@ -7,7 +7,10 @@ package com.tantech.cards.ui;
 
 import com.tantech.cards.db.Card;
 import com.tantech.cards.db.OwnedCard;
+import com.tantech.cards.dbimport.BackgroundDBImport;
+import com.tantech.cards.dbimport.DbImportService;
 import com.tantech.cards.search.CardSearchService;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -19,6 +22,8 @@ import org.apache.pivot.collections.List;
 import org.apache.pivot.collections.Map;
 import org.apache.pivot.collections.Sequence;
 import org.apache.pivot.util.Resources;
+import org.apache.pivot.util.concurrent.Task;
+import org.apache.pivot.util.concurrent.TaskListener;
 import org.apache.pivot.wtk.Action;
 import org.apache.pivot.wtk.Alert;
 import org.apache.pivot.wtk.ApplicationContext;
@@ -27,17 +32,21 @@ import org.apache.pivot.wtk.ButtonStateListener;
 import org.apache.pivot.wtk.Checkbox;
 import org.apache.pivot.wtk.Component;
 import org.apache.pivot.wtk.ComponentKeyListener;
+import org.apache.pivot.wtk.FileBrowserSheet;
 import org.apache.pivot.wtk.ImageView;
 import org.apache.pivot.wtk.Keyboard;
 import org.apache.pivot.wtk.Label;
 import org.apache.pivot.wtk.MessageType;
 import org.apache.pivot.wtk.Prompt;
 import org.apache.pivot.wtk.PushButton;
+import org.apache.pivot.wtk.Sheet;
+import org.apache.pivot.wtk.SheetCloseListener;
 import org.apache.pivot.wtk.Span;
 import org.apache.pivot.wtk.SuggestionPopup;
 import org.apache.pivot.wtk.TabPane;
 import org.apache.pivot.wtk.TableView;
 import org.apache.pivot.wtk.TableViewSelectionListener;
+import org.apache.pivot.wtk.TaskAdapter;
 import org.apache.pivot.wtk.TextInput;
 import org.apache.pivot.wtk.TextInputContentListener;
 import org.apache.pivot.wtk.Window;
@@ -51,6 +60,7 @@ public class AppWindowUI extends Window implements Bindable {
     @BXML private ImageView cardImageView;
     @BXML private Label cardText;
     @BXML private PushButton searchButton;
+    @BXML private PushButton clearButton;
     @BXML private PushButton addButton;
     @BXML private TextInput nameSearch;
     @BXML private TextInput textSearch;
@@ -60,6 +70,7 @@ public class AppWindowUI extends Window implements Bindable {
     @BXML private TableView cardsTableView;
     @BXML private TableView ownedTableView;
     @BXML private TabPane tabPane;
+    @BXML private FileBrowserSheet fileBrowserSheet;
     
     private static AppWindowUI instance;
     private ImageView origImageView;
@@ -67,7 +78,10 @@ public class AppWindowUI extends Window implements Bindable {
     private SuggestionPopup suggestionPopup = new SuggestionPopup();
     
     private CardSearchService cardSearchService;
+    private DbImportService dbImportService;
 
+    // Getters and Setters
+    
     public CardSearchService getCardSearchService() {
         return cardSearchService;
     }
@@ -75,16 +89,26 @@ public class AppWindowUI extends Window implements Bindable {
     public void setCardSearchService(CardSearchService cardSearchService) {
         this.cardSearchService = cardSearchService;
     }
+
+    public DbImportService getDbImportService() {
+        return dbImportService;
+    }
+
+    public void setDbImportService(DbImportService dbImportService) {
+        this.dbImportService = dbImportService;
+    }
+    
+    // Methods
     
     public void nameSearchSuggestionConfig(){
         // Prefill card name array for popup suggestions.
         cardNames = new ArrayList<String>();
         cardNames.setComparator(String.CASE_INSENSITIVE_ORDER);
         
-        java.util.List<Card> cardsTempList = this.getCardSearchService().searchCards("", "", "", "", "");
+        java.util.List<String> cardsTempList = this.getCardSearchService().searchNames();
         
-        for(Card card:cardsTempList){
-            cardNames.add(card.getName());
+        for(String name:cardsTempList){
+            cardNames.add(name);
         }
     }
     
@@ -167,10 +191,7 @@ public class AppWindowUI extends Window implements Bindable {
                 tabPane.setSelectedIndex(0);
             }
             
-            nameSearch.setText("");
-            textSearch.setText("");
-            typeSearch.setText("");
-            colorsSearch.setText("");
+            
             
 //            ArrayList<String> options = new ArrayList<String>();
 //            options.add("OK");
@@ -184,6 +205,7 @@ public class AppWindowUI extends Window implements Bindable {
             
         }
     };
+    
     private Action addAction = new Action(false) {
         @Override
         @SuppressWarnings("unchecked")
@@ -199,6 +221,19 @@ public class AppWindowUI extends Window implements Bindable {
                 }
             }, 2000);
             
+        }
+    };
+    
+    private Action clearAction = new Action() {
+        @Override
+        @SuppressWarnings("unchecked")
+        public void perform(Component source) {
+            // Clear search fields
+            nameSearch.setText("");
+            textSearch.setText("");
+            typeSearch.setText("");
+            colorsSearch.setText("");
+            owned.setSelected(false);           
         }
     };
  
@@ -366,36 +401,96 @@ public class AppWindowUI extends Window implements Bindable {
         ButtonStateListener checkboxStateListener = new ButtonStateListener() {
             @Override
             public void stateChanged(Button button, Button.State previousState) {
-                 searchAction.setEnabled(true);
+                 searchAction.setEnabled(owned.isSelected());
             }
         };
 
         owned.getButtonStateListeners().add(checkboxStateListener);
         searchButton.setAction(searchAction);
+        clearButton.setAction(clearAction);
         addButton.setAction(addAction);
     }
 
     public AppWindowUI() {
         instance = this;
         
+        Action.getNamedActions().put("fileOpen", new Action() {
+            @Override
+            public void perform(Component source) {
+                fileBrowserSheet.setMode(FileBrowserSheet.Mode.OPEN);
+                fileBrowserSheet.open(instance.getWindow(), new SheetCloseListener() {
+                    @Override
+                    public void sheetClosed(Sheet sheet) {
+                        if (sheet.getResult()) {
+                            System.out.println("File: "+fileBrowserSheet.getSelectedFile().getAbsolutePath());
+                            String csvFile = fileBrowserSheet.getSelectedFile().getAbsolutePath();
+                            try {
+                                dbImportService.importOwnedCsv(csvFile);
+                            } catch (IOException ex) {
+                                Logger.getLogger(AppWindowUI.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        Alert.alert(MessageType.INFO, "Imported:"+fileBrowserSheet.getSelectedFile().getName()
+                                , instance.getWindow());
+                        } else {
+                            Alert.alert(MessageType.INFO, "You didn't select anything.", instance.getWindow());
+                        }
+                    }
+                });
+                
+            }
+        });
+        
         Action.getNamedActions().put("reIndex", new Action() {
             @Override
             public void perform(Component source) {
-//                ApplicationContext.queueCallback(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            cardSearchService.reloadIndex();
-//                        } catch (InterruptedException ex) {
-//                            Logger.getLogger(AppWindowUI.class.getName()).log(Level.SEVERE, null, ex);
-//                        }
-//                    }
-//                });
                 try {
                     cardSearchService.reloadIndex();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(AppWindowUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            }
+        });
+        
+        Action.getNamedActions().put("refreshDB", new Action() {
+            @Override
+            public void perform(Component source) {
+                //Syncrhonously
+//                try {
+//                    dbImportService.importDb();
+//                } catch (IOException ex) {
+//                    Logger.getLogger(AppWindowUI.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+                // Async
+                BackgroundDBImport bgImportTask = new BackgroundDBImport(dbImportService);
+                                
+                TaskListener<String> taskListener = new TaskListener<String>() {
+                    @Override
+                    public void taskExecuted(Task<String> task) {
+                        Alert cardAdded = new Alert();
+                        cardAdded.setMessage("DB refreshed");
+                        cardAdded.open( instance.getWindow());
+                        ApplicationContext.scheduleCallback(new Runnable() {
+                            @Override
+                            public void run() {
+                                cardAdded.close();                    
+                            }
+                        }, 3000);
+                    }
+
+                    @Override
+                    public void executeFailed(Task<String> task) {
+                        Alert cardAdded = new Alert();
+                        cardAdded.setMessage("DB refresh failed");
+                        cardAdded.open( instance.getWindow());
+                        ApplicationContext.scheduleCallback(new Runnable() {
+                            @Override
+                            public void run() {
+                                cardAdded.close();                    
+                            }
+                        }, 3000);
+                    }
+                };
+                bgImportTask.execute(new TaskAdapter<String>(taskListener));
             }
         });
     }    

@@ -132,7 +132,9 @@ public class Card{
     private String artist;
     private String number;
     private String power;
+    private Integer powerInt;
     private String toughness;
+    private Integer toughnessInt;
     private String loyalty;
     private int multiverseid = -1;
 //	private int[] variations;
@@ -162,16 +164,32 @@ public class Card{
       property = "setId")
     private MTGSet mtgSet;
     
-//	private String[] printings;
+    @IndexedEmbedded
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "printings", joinColumns = @JoinColumn(name = "card_id"))
+    @Column(name = "printing")
+    private Set<String> printings = new HashSet<>();
+
     private String imageUrl;
-//	private Legality[] legalities;
+    
+//    @IndexedEmbedded
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @CollectionTable(name = "legalities", joinColumns = @JoinColumn(name = "card_id"))
+//    @Column(name = "legality")
+//    private Set<String> legalities = new HashSet<>();
+
 //	private BigDecimal priceHigh;
 //	private BigDecimal priceMid;
 //	private BigDecimal priceLow;
 //	private BigDecimal onlinePriceHigh;
 //	private BigDecimal onlinePriceMid;
 //	private BigDecimal onlinePriceLow;
-//	private Ruling[] rulings;
+//    
+//    @IndexedEmbedded
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @CollectionTable(name = "rulings", joinColumns = @JoinColumn(name = "card_id"))
+//    @Column(name = "ruling")
+//    private Set<String> rulings = new HashSet<>();
 
 // mappedBy needs to be set to the field name from the other side of the relationship.    
     @OneToMany(mappedBy="cardMaster", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -180,6 +198,9 @@ public class Card{
 //        property = "ownedId")
     private Set<OwnedCard> cardOwned;
 
+    
+    // Getters and Setters
+    
     public Set<OwnedCard> getCardOwned() {
         return cardOwned;
     }
@@ -349,6 +370,22 @@ public class Card{
             this.toughness = toughness;
     }
 
+    public Integer getPowerInt() {
+        return powerInt;
+    }
+
+    public void setPowerInt(Integer powerInt) {
+        this.powerInt = powerInt;
+    }
+
+    public Integer getToughnessInt() {
+        return toughnessInt;
+    }
+
+    public void setToughnessInt(Integer toughnessInt) {
+        this.toughnessInt = toughnessInt;
+    }
+
     public String getLoyalty() {
             return loyalty;
     }
@@ -501,14 +538,14 @@ public class Card{
             this.mtgSet = mtgSet;
     }
 
-//	public String[] getPrintings() {
-//		return printings;
-//	}
-//
-//	public void setPrintings(String[] printings) {
-//		this.printings = printings;
-//	}
-//
+    public Set<String> getPrintings() {
+        return printings;
+    }
+
+    public void setPrintings(Set<String> printings) {
+        this.printings = printings;
+    }
+
     public String getOriginalText() {
             return originalText;
     }
@@ -524,15 +561,6 @@ public class Card{
     public void setImageUrl(String imageUrl) {
             this.imageUrl = imageUrl;
     }
-//
-//	public Legality[] getLegalities() {
-//		return legalities;
-//	}
-//
-//	public void setLegalities(Legality[] legalities) {
-//		this.legalities = legalities;
-//	}
-//
 //	public BigDecimal getPriceHigh() {
 //		return priceHigh;
 //	}
@@ -581,11 +609,19 @@ public class Card{
 //		this.onlinePriceLow = onlinePriceLow;
 //	}
 
-//  public Ruling[] getRulings() {
-//    return rulings;
-//  }
+//    public Set<String> getRulings() {
+//        return rulings;
+//    }
 //
-//  public void setRulings(Ruling[] rulings) {
-//    this.rulings = rulings;
-//  }
+//    public void setRulings(Set<String> rulings) {
+//        this.rulings = rulings;
+//    }
+
+//    public Set<String> getLegalities() {
+//        return legalities;
+//    }
+//
+//    public void setLegalities(Set<String> legalities) {
+//        this.legalities = legalities;
+//    }
 }

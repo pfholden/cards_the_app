@@ -20,16 +20,24 @@ limitations under the License.
     xmlns:bxml="http://pivot.apache.org/bxml"
     xmlns:content="org.apache.pivot.wtk.content"
     xmlns="org.apache.pivot.wtk">
+    <bxml:define>
+        <FileBrowserSheet bxml:id="fileBrowserSheet"/>
+    </bxml:define>
     <MenuBar.Item buttonData="File">
         <Menu>
             <Menu.Section>
-                <Menu.Item>
+                <Menu.Item action="fileOpen">
                     <buttonData>
-                        <content:ButtonData text="New" icon="@document-new.png"/>
+                        <content:ButtonData text="Import CSV" icon="@document-new.png"/>
+                    </buttonData>
+                </Menu.Item>
+                <Menu.Item action="refreshDB">
+                    <buttonData>
+                        <content:ButtonData text="Refresh DB"  icon="@document-open.png"/>
                     </buttonData>
                 </Menu.Item>
                 <Menu.Item action="reIndex">
-                    <buttonData >
+                    <buttonData>
                         <content:ButtonData text="Re-Index"  icon="@document-open.png"/>
                     </buttonData>
                 </Menu.Item>

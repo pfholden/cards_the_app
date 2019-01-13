@@ -138,6 +138,7 @@
                                                 </BoxPane>
                                                 <BoxPane>
                                                     <PushButton bxml:id="searchButton" buttonData="Submit" />
+                                                    <PushButton bxml:id="clearButton" buttonData="Clear" />
                                                 </BoxPane>
                                             </Form.Section>
                                         </Form>
