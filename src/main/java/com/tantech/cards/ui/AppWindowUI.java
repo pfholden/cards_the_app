@@ -10,14 +10,17 @@ import com.tantech.cards.db.OwnedCard;
 import com.tantech.cards.dbimport.BackgroundDBImport;
 import com.tantech.cards.dbimport.DbImportService;
 import com.tantech.cards.search.CardSearchService;
+import com.tantech.cards.utils.MtgSymbolConvert;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.ArrayList;
+import org.apache.pivot.collections.HashMap;
 import org.apache.pivot.collections.List;
 import org.apache.pivot.collections.Map;
 import org.apache.pivot.collections.Sequence;
@@ -27,16 +30,19 @@ import org.apache.pivot.util.concurrent.TaskListener;
 import org.apache.pivot.wtk.Action;
 import org.apache.pivot.wtk.Alert;
 import org.apache.pivot.wtk.ApplicationContext;
+import org.apache.pivot.wtk.BoxPane;
 import org.apache.pivot.wtk.Button;
 import org.apache.pivot.wtk.ButtonStateListener;
 import org.apache.pivot.wtk.Checkbox;
 import org.apache.pivot.wtk.Component;
 import org.apache.pivot.wtk.ComponentKeyListener;
 import org.apache.pivot.wtk.FileBrowserSheet;
+import org.apache.pivot.wtk.FillPane;
 import org.apache.pivot.wtk.ImageView;
 import org.apache.pivot.wtk.Keyboard;
 import org.apache.pivot.wtk.Label;
 import org.apache.pivot.wtk.MessageType;
+import org.apache.pivot.wtk.Orientation;
 import org.apache.pivot.wtk.Prompt;
 import org.apache.pivot.wtk.PushButton;
 import org.apache.pivot.wtk.Sheet;
@@ -49,7 +55,9 @@ import org.apache.pivot.wtk.TableViewSelectionListener;
 import org.apache.pivot.wtk.TaskAdapter;
 import org.apache.pivot.wtk.TextInput;
 import org.apache.pivot.wtk.TextInputContentListener;
+import org.apache.pivot.wtk.TextPane;
 import org.apache.pivot.wtk.Window;
+import org.apache.pivot.wtk.text.Document;
 
 /**
  *
@@ -58,7 +66,8 @@ import org.apache.pivot.wtk.Window;
 
 public class AppWindowUI extends Window implements Bindable {
     @BXML private ImageView cardImageView;
-    @BXML private Label cardText;
+//    @BXML private Label cardText;
+    @BXML private BoxPane cardTestBox;
     @BXML private PushButton searchButton;
     @BXML private PushButton clearButton;
     @BXML private PushButton addButton;
@@ -76,6 +85,13 @@ public class AppWindowUI extends Window implements Bindable {
     private ImageView origImageView;
     private ArrayList<String> cardNames;
     private SuggestionPopup suggestionPopup = new SuggestionPopup();
+    
+    static Map<String,String> textLabelStyles = new HashMap<>();
+    static {
+        textLabelStyles.put("wrapText", "true");
+        textLabelStyles.put("color","#FF0000");
+    }
+    
     
     private CardSearchService cardSearchService;
     private DbImportService dbImportService;
@@ -126,10 +142,49 @@ public class AppWindowUI extends Window implements Bindable {
     
     private void displaySingleCard(Card card) {
         String cardTextDisplay = null;
-        if(card.getName() != null) cardTextDisplay = card.getName();
-        if(card.getText() != null) cardTextDisplay = cardTextDisplay+"\n\n"+card.getText();
-        if (card.getFlavor() != null ) cardTextDisplay = cardTextDisplay+"\n\n"+card.getFlavor();
-        cardText.setText(cardTextDisplay);
+        
+        
+        
+        cardTestBox.removeAll();
+        
+        if(card.getName() != null) {
+//            cardTextDisplay = card.getName();
+            BoxPane nameBox = new BoxPane(Orientation.HORIZONTAL);
+            Label nameLabel = new Label(card.getName());
+            nameLabel.setStyles(textLabelStyles);
+            nameBox.add(nameLabel);
+            cardTestBox.add(nameBox);
+        }
+        if(card.getText() != null) {
+//            cardTextDisplay = cardTextDisplay+"\n\n"+card.getText();
+
+            TextPane textFill = new TextPane();
+            Document textDoc = new Document();
+            textFill.setDocument(textDoc);
+            java.util.Map<String, String> textMap = MtgSymbolConvert.parseManaSymbols(card.getText()); 
+        
+            for(Entry<String, String> entry : textMap.entrySet()){
+                System.out.println(entry);
+                Label textLabel = new Label(entry.getValue());
+                textLabel.setStyles(textLabelStyles);
+                textFill.insertComponent(textLabel);
+            }
+            cardTestBox.add(textFill);
+        }
+        if (card.getFlavor() != null ) {
+//            cardTextDisplay = cardTextDisplay+"\n\n"+card.getFlavor();
+            FillPane flavorFill = new FillPane(Orientation.VERTICAL);
+            Label flavorLabel = new Label(card.getFlavor());
+            flavorLabel.setStyles(textLabelStyles);
+            flavorFill.add(flavorLabel);
+            cardTestBox.add(flavorFill);
+        }
+        
+        System.out.println("Before call to parse");
+        
+        
+        cardTestBox.repaint();
+//        cardText.setText(cardTextDisplay);
         if (card.getImageUrl() != null){
             URL imageUrl = null;
             try {
@@ -169,7 +224,7 @@ public class AppWindowUI extends Window implements Bindable {
                     displaySingleCard(cards.get(0));
                 }else{
                     cardImageView.clearImage();
-                    cardText.setText("");
+                    cardTestBox.removeAll();
                 }
                 displayCardsFound(cards.getLength());
                 tabPane.setSelectedIndex(1);
@@ -185,7 +240,7 @@ public class AppWindowUI extends Window implements Bindable {
                     displaySingleCard(cards.get(0));
                 }else{
                     cardImageView.clearImage();
-                    cardText.setText("");
+                    cardTestBox.removeAll();
                 }
                 displayCardsFound(cards.getLength());
                 tabPane.setSelectedIndex(0);
@@ -273,23 +328,8 @@ public class AppWindowUI extends Window implements Bindable {
                     if (firstSelectedIndex == lastSelectedIndex) {
                         List<Card> tableData = (List<Card>)ownedTableView.getTableData();
                         card = tableData.get(firstSelectedIndex);
-                        try {
-                        String cardTextDisplay = null;
-                        if(card.getName() != null) cardTextDisplay = card.getName();
-                        if(card.getText() != null) cardTextDisplay = cardTextDisplay+"\n\n"+card.getText();
-                        if (card.getFlavor() != null ) cardTextDisplay = cardTextDisplay+"\n\n"+card.getFlavor();
-                        cardText.setText(cardTextDisplay);
-                        if (card.getImageUrl() != null){
-                            URL imageUrl = new URL(card.getImageUrl());
-                            cardImageView.setImage(imageUrl);
-                        } else {
-                            cardImageView.clearImage();
-                        }
-                        addAction.setEnabled(true);
-                        } catch (MalformedURLException ex) {
-                            Logger.getLogger(AppWindowUI.class.getName()).log(Level.SEVERE, null, ex);
+                        displaySingleCard(card);
                     } 
-                }
                 }
             };
         });

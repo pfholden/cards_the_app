@@ -161,11 +161,11 @@
                                 <ScrollPane preferredWidth="80" preferredHeight="110"
                                             horizontalScrollBarPolicy="fill"
                                             verticalScrollBarPolicy="fill_to_capacity">
-                                    <Border styles="{backgroundColor:'#FFFF00', padding:4, cornerRadii:10}">
-                                        <BoxPane orientation="vertical" styles="{fill:true,
-                                                    padding:{top:2, left:4, bottom:8, right:4}}">
-                                            <Label bxml:id="cardText" styles="{font:'Arial bold 12', color:'#000000', 
-                                                 wrapText:true}"/>
+                                    <Border styles="{backgroundColor:'#FFFFFF', padding:4, cornerRadii:10}">
+                                        <BoxPane bxml:id="cardTestBox" preferredWidth="230" orientation="vertical"
+                                                 styles="{fill:true, padding:{top:2, left:4, bottom:8, right:4}}">
+                                           <!-- <Label bxml:id="cardText" styles="{font:'Arial bold 12', color:'#000000', 
+                                                 wrapText:true}"/> -->
                                         </BoxPane>
                                     </Border>
                                 </ScrollPane>
