@@ -16,10 +16,8 @@ import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 
-// This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
+// This will be AUTO IMPLEMENTED by Spring into a Bean called cardRepository
 // CRUD refers Create, Read, Update, Delete
-//@Repository
-//@Transactional
 public interface CardRepository extends CrudRepository<Card, Integer> {
     
     public Set<Card> findByName(String name);

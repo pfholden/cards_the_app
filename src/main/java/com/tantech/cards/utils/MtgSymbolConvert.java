@@ -74,6 +74,14 @@ public class MtgSymbolConvert {
 		manaMap.put("{RP}", "icons/mana/Symbol_RP_mana.gif");
 	}
         
+        /**
+         * Method for parsing out the mana tags in text fields. For example,
+         * "{T}: Add any color mana."
+         * @param inputText Text possibly containing {*} symbol
+         * @return Map containing keys of image* or string* with mana symbols 
+         * mapped with image* and the other text as string*.
+         */
+        
         public static Map<String, String> parseManaSymbols(String inputText) {
             System.out.println("In parse. Passed string: "+inputText);
             
@@ -108,32 +116,5 @@ public class MtgSymbolConvert {
             if (currentChar > 0)
                 convertedText.put("string"+stringNum++, inputText);
             return convertedText;
-        }
-            
-            
-            
-            
-            
-            
-            
-//            String text = inputText.trim();
-//            if (text.equals("*"))
-//                    return convertedText;
-//            while (text.length() > 0) {
-//                boolean cut = false;
-//                for (Iterator<String> iterator = manaMap.keySet().iterator(); iterator.hasNext() && text.length() > 0;) {
-//                    System.out.println("In iterator loop");
-//                    String sym = iterator.next();
-//                    while (text.startsWith(sym)) {
-//                        String im = manaMap.get(sym);
-//                        System.out.println("Sym: "+sym);
-//                        convertedText.add(sym);
-//                        text = text.substring(sym.length()).trim();
-//                        cut = true;
-//                    }
-//                }
-//            }
-//            return convertedText;
-//	}
-    
+        }    
 }

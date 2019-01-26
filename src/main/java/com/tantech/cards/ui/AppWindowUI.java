@@ -58,6 +58,8 @@ import org.apache.pivot.wtk.TextInputContentListener;
 import org.apache.pivot.wtk.TextPane;
 import org.apache.pivot.wtk.Window;
 import org.apache.pivot.wtk.text.Document;
+import org.apache.pivot.wtk.text.ImageNode;
+import org.apache.pivot.wtk.text.Paragraph;
 
 /**
  *
@@ -66,7 +68,7 @@ import org.apache.pivot.wtk.text.Document;
 
 public class AppWindowUI extends Window implements Bindable {
     @BXML private ImageView cardImageView;
-//    @BXML private Label cardText;
+    @BXML private Label cardText;
     @BXML private BoxPane cardTestBox;
     @BXML private PushButton searchButton;
     @BXML private PushButton clearButton;
@@ -116,6 +118,9 @@ public class AppWindowUI extends Window implements Bindable {
     
     // Methods
     
+ /**
+  * 
+  */
     public void nameSearchSuggestionConfig(){
         // Prefill card name array for popup suggestions.
         cardNames = new ArrayList<String>();
@@ -160,14 +165,34 @@ public class AppWindowUI extends Window implements Bindable {
 
             TextPane textFill = new TextPane();
             Document textDoc = new Document();
+            
             textFill.setDocument(textDoc);
+//            textFill.insert("");
+            
             java.util.Map<String, String> textMap = MtgSymbolConvert.parseManaSymbols(card.getText()); 
         
             for(Entry<String, String> entry : textMap.entrySet()){
                 System.out.println(entry);
-                Label textLabel = new Label(entry.getValue());
-                textLabel.setStyles(textLabelStyles);
-                textFill.insertComponent(textLabel);
+                if(entry.getKey().startsWith("image")){
+                    URL imageUrl = null;
+                    
+                    imageUrl = this.getClass().getResource("star.png");
+                    System.out.println("URI: "+imageUrl.toString());
+//                    try {
+//                        Image manaImage = Image.load(imageUrl);
+//                        textFill.insertImage(manaImage);
+                        textDoc.add(new ImageNode(imageUrl));
+//                    } catch (TaskExecutionException ex) {
+//                        Logger.getLogger(AppWindowUI.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+                }else {
+                    textDoc.add(new Paragraph(entry.getValue()));
+                }
+                
+//                textDoc.add(textDoc);
+//                Label textLabel = new Label(entry.getValue());
+//                textLabel.setStyles(textLabelStyles);
+//                textFill.insertComponent(textLabel);
             }
             cardTestBox.add(textFill);
         }
