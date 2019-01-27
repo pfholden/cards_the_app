@@ -20,6 +20,8 @@ import org.springframework.data.jpa.repository.Query;
 // CRUD refers Create, Read, Update, Delete
 public interface CardRepository extends CrudRepository<Card, Integer> {
     
+    public Card findByCardId(Integer cardId);
+    
     public Set<Card> findByName(String name);
     
     public Card findByNameAndMtgSet(String name, MTGSet mtgSet);

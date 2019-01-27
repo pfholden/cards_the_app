@@ -95,16 +95,15 @@ public class MtgSymbolConvert {
                 while(currentChar < inputText.length()){
                     if(inputText.charAt(currentChar) == '{'){
                         if (currentChar > 0)
-                            convertedText.put("string"+stringNum++, inputText.substring(beginInd, currentChar).trim());
+                            convertedText.put("string"+stringNum++, inputText.substring(beginInd, currentChar));
                         //Multiple symbols may be together
                         for (Iterator<String> iterator = manaMap.keySet().iterator(); iterator.hasNext();) {
                             String sym = iterator.next();
                             if(inputText.startsWith(sym, currentChar)){
                                 //Found match. Break string and add to map with image tag
-                                //TODO: figure out how to add sequential image tags to one string.
-                                convertedText.put("image"+imgNum++, inputText.substring(currentChar, currentChar+sym.length()));
+                                convertedText.put("image"+imgNum++, manaMap.get(sym));
                                 currentChar = currentChar+sym.length();   
-                                inputText = inputText.substring(currentChar).trim();  
+                                inputText = inputText.substring(currentChar);  
                                 currentChar=0;
                             }
                         }
