@@ -59,31 +59,75 @@ public class CardsSwingUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        cardImageLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        cardTextPane = new javax.swing.JTextPane();
+        jPanel4 = new javax.swing.JPanel();
         CardTab = new javax.swing.JTabbedPane();
         allCardScroll = new javax.swing.JScrollPane();
         allCardTable = new javax.swing.JTable();
         ownedCardScroll = new javax.swing.JScrollPane();
         ownedCardTable = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
-        cardImageLabel = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        cardTextPane = new javax.swing.JTextPane();
-        nameSearch = new javax.swing.JTextField();
-        textSearch = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        typeSearch = new javax.swing.JTextField();
-        colorSearch = new javax.swing.JTextField();
-        ownedCheckBox = new javax.swing.JCheckBox();
-        searchButton = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         clearButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        colorSearch = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        typeSearch = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        nameSearch = new javax.swing.JTextField();
+        textSearch = new javax.swing.JTextField();
+        ownedCheckBox = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setMinimumSize(new java.awt.Dimension(254, 330));
+        jPanel1.setPreferredSize(new java.awt.Dimension(250, 330));
+
+        cardImageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cardImageLabel.setAlignmentX(0.5F);
+        cardImageLabel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        cardImageLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        cardImageLabel.setPreferredSize(new java.awt.Dimension(254, 330));
+
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setViewportBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        jScrollPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        cardTextPane.setEditable(false);
+        cardTextPane.setBorder(null);
+        cardTextPane.setAutoscrolls(false);
+        cardTextPane.setMargin(new java.awt.Insets(10, 10, 10, 10));
+        cardTextPane.setPreferredSize(new java.awt.Dimension(250, 100));
+        jScrollPane1.setViewportView(cardTextPane);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cardImageLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(cardImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1)
+                .addContainerGap())
+        );
 
         CardTab.setName(""); // NOI18N
 
@@ -134,38 +178,51 @@ public class CardsSwingUI extends javax.swing.JFrame {
 
         CardTab.addTab("Owned Cards", ownedCardScroll);
 
-        jPanel1.setMinimumSize(new java.awt.Dimension(254, 330));
-        jPanel1.setPreferredSize(new java.awt.Dimension(250, 330));
-
-        cardImageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        cardImageLabel.setAlignmentX(0.5F);
-        cardImageLabel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        cardImageLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        cardImageLabel.setPreferredSize(new java.awt.Dimension(254, 330));
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(cardImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
-                .addContainerGap())
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(cardImageLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 159, Short.MAX_VALUE)
         );
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setViewportBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        jScrollPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        clearButton.setText("Clear");
+        clearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearButtonActionPerformed(evt);
+            }
+        });
 
-        cardTextPane.setEditable(false);
-        cardTextPane.setBorder(null);
-        cardTextPane.setAutoscrolls(false);
-        cardTextPane.setMargin(new java.awt.Insets(10, 10, 10, 10));
-        cardTextPane.setPreferredSize(new java.awt.Dimension(250, 100));
-        jScrollPane1.setViewportView(cardTextPane);
+        jLabel3.setText("Type:");
+
+        jLabel4.setText("Color:");
+
+        colorSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                colorSearchKeyTyped(evt);
+            }
+        });
+
+        searchButton.setText("Search");
+        searchButton.setEnabled(false);
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Name:");
+
+        typeSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                typeSearchKeyTyped(evt);
+            }
+        });
+
+        jLabel2.setText("Text:");
 
         nameSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -179,22 +236,6 @@ public class CardsSwingUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Name:");
-
-        jLabel2.setText("Text:");
-
-        typeSearch.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                typeSearchKeyTyped(evt);
-            }
-        });
-
-        colorSearch.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                colorSearchKeyTyped(evt);
-            }
-        });
-
         ownedCheckBox.setText("Owned");
         ownedCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -202,24 +243,87 @@ public class CardsSwingUI extends javax.swing.JFrame {
             }
         });
 
-        searchButton.setText("Search");
-        searchButton.setEnabled(false);
-        searchButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchButtonActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel2))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(ownedCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(clearButton))
+                    .addComponent(typeSearch, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(colorSearch, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(textSearch)
+                    .addComponent(nameSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(typeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(colorSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(clearButton)
+                    .addComponent(searchButton)
+                    .addComponent(ownedCheckBox))
+                .addContainerGap())
+        );
 
-        clearButton.setText("Clear");
-        clearButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearButtonActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setText("Type:");
-
-        jLabel4.setText("Color:");
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(CardTab, javax.swing.GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(CardTab, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -235,69 +339,19 @@ public class CardsSwingUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(CardTab)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel2))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(ownedCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(searchButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(clearButton))
-                            .addComponent(typeSearch, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(colorSearch, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(textSearch)
-                            .addComponent(nameSearch, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(0, 298, Short.MAX_VALUE)))
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
-                    .addComponent(CardTab, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(nameSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(textSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(typeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(colorSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(clearButton)
-                            .addComponent(searchButton)
-                            .addComponent(ownedCheckBox)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -346,23 +400,8 @@ public class CardsSwingUI extends javax.swing.JFrame {
         if(!searchButton.isEnabled()) searchButton.setEnabled(true);
     }//GEN-LAST:event_colorSearchKeyTyped
 
-    protected void handleAllSelectionEvent(ListSelectionEvent e) {
-        if (e.getValueIsAdjusting())
-            return;
-        Integer selectedRow = 0;
-        ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-         // Find out which indexes are selected.
-        int minIndex = lsm.getMinSelectionIndex();
-        int maxIndex = lsm.getMaxSelectionIndex();
-        for (int i = minIndex; i <= maxIndex; i++) {
-            if (lsm.isSelectedIndex(i)) {
-                selectedRow=i;
-            }
-        }
-                
-        Object cardID = allCardTable.getModel().getValueAt(selectedRow,4);
-        
-        Card lookupCard =  cardRepo.findByCardId((Integer) cardID);
+    private void displaySingleCard(Integer cardId){
+        Card lookupCard =  cardRepo.findByCardId((Integer) cardId);
         
         if ( !lookupCard.getImageUrl().isEmpty()){
             URL url=null;
@@ -423,89 +462,49 @@ public class CardsSwingUI extends javax.swing.JFrame {
         }catch (BadLocationException ex) {
             Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-                
-
+    }
+    
+    
+    protected void handleAllSelectionEvent(ListSelectionEvent e) {
+        if (e.getValueIsAdjusting())
+            return;
+        
+        ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+        
+        if(!lsm.isSelectionEmpty()){
+            Integer selectedRow = 0;
+             // Find out which indexes are selected.
+            int minIndex = lsm.getMinSelectionIndex();
+            int maxIndex = lsm.getMaxSelectionIndex();
+            for (int i = minIndex; i <= maxIndex; i++) {
+                if (lsm.isSelectedIndex(i)) {
+                    selectedRow=i;
+                }
+            }
+            lsm.clearSelection();
+            displaySingleCard((Integer) allCardTable.getModel().getValueAt(selectedRow,4));
+        } 
     }
     
     protected void handleOwnedSelectionEvent(ListSelectionEvent e) {
         if (e.getValueIsAdjusting())
             return;
-        Integer selectedRow = 0;
+        
         ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-         // Find out which indexes are selected.
-        int minIndex = lsm.getMinSelectionIndex();
-        int maxIndex = lsm.getMaxSelectionIndex();
-        for (int i = minIndex; i <= maxIndex; i++) {
-            if (lsm.isSelectedIndex(i)) {
-                selectedRow=i;
-            }
-        }
-                
-        Object cardID = ownedCardTable.getModel().getValueAt(selectedRow,4);
-        
-        Card lookupCard =  cardRepo.findByCardId((Integer) cardID);
-        
-        if ( !lookupCard.getImageUrl().isEmpty()){
-            URL url=null;
-
-            try {
-    //            System.out.println("Image: "+lookupCard.getImageUrl());
-                url = new URL(lookupCard.getImageUrl());
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            BufferedImage image;
-            try {
-                image = ImageIO.read(url);
-                
-                ImageIcon cardImage = new ImageIcon(image);
-                cardImageLabel.setIcon(new ImageIcon(image));
-            } catch (IOException ex) {
-                Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        
-        StyledDocument doc = (StyledDocument) cardTextPane.getDocument();
-        Style iconStyle = doc.addStyle("StyleName", null);
-        Style textStyle = doc.addStyle("TextStyle", null);
-        
-        try {
-            doc.remove(0, doc.getLength());
-                
-            // If cardName is not empty, add to cardTextPane
-            if (lookupCard.getName() != null){
-                StyleConstants.setBold(textStyle, true);
-                doc.insertString(doc.getLength(), lookupCard.getName()+"\n\n", textStyle);
-                StyleConstants.setBold(textStyle, false);
-            }
-
-            // If cardText is not empty, add to cardTextPane
-            if (lookupCard.getText() != null){
-                Map<String, String> textMap = MtgSymbolConvert.parseManaSymbols(lookupCard.getText()); 
-                for(Map.Entry<String, String> entry : textMap.entrySet()){
-                    System.out.println(entry);
-                    if(entry.getKey().startsWith("image")){
-                        //Set the image icon style to the appropriate icon
-                        StyleConstants.setIcon(iconStyle, createImageIcon(entry.getValue(), ""));
-                        doc.insertString(doc.getLength(), "ignored text", iconStyle);
-                    } else {
-                        doc.insertString(doc.getLength(), entry.getValue(), textStyle);
-                    }
+        if (!lsm.isSelectionEmpty()){
+            Integer selectedRow = 0;
+             // Find out which indexes are selected.
+            int minIndex = lsm.getMinSelectionIndex();
+            int maxIndex = lsm.getMaxSelectionIndex();
+            for (int i = minIndex; i <= maxIndex; i++) {
+                if (lsm.isSelectedIndex(i)) {
+                    selectedRow=i;
                 }
             }
-            // If cardText is not empty, add to cardTextPane
-            if (lookupCard.getFlavor() != null){
-                StyleConstants.setItalic(textStyle, true);
-                doc.insertString(doc.getLength(), "\n\n"+lookupCard.getFlavor(), textStyle);
-                StyleConstants.setItalic(textStyle, false);
-            }
-            cardTextPane.setCaretPosition(0);
-        }catch (BadLocationException ex) {
-            Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
+            lsm.clearSelection();     
+            
+            displaySingleCard((Integer) ownedCardTable.getModel().getValueAt(selectedRow,4));
         }
-                
-
     }
     
     /** Returns an ImageIcon, or null if the path was invalid. */
@@ -519,8 +518,20 @@ public class CardsSwingUI extends javax.swing.JFrame {
         }
     }
     
+    private void clearCardDisplay(){
+        StyledDocument doc = (StyledDocument) cardTextPane.getDocument();
+        try {
+            doc.remove(0, doc.getLength());
+            cardImageLabel.setIcon(null);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     
     public void updateOwnedTable(String name, String text, String type, String colors, String set){
+        
+        clearCardDisplay();
         
         java.util.List<OwnedCard> cardsTempList = cardSearchService.searchOwnedCards(name, text, type, colors, set);
         		
@@ -546,10 +557,12 @@ public class CardsSwingUI extends javax.swing.JFrame {
         if (columnModel.getColumnIndex((Object) columName) >= 0){
             columnModel.removeColumn(columnModel.getColumn(columnModel.getColumnIndex((Object) "Card ID")));
         }
+//        ListSelectionModel lsm = ownedCardTable.getSelectionModel();
+//        lsm.clearSelection();
     }
     
     public void updateAllTable(String name, String text, String type, String colors, String set){
-        
+        clearCardDisplay();
         java.util.List<Card> cardsTempList = cardSearchService.searchCards(name, text, type, colors, set);
         		
         Object[][] data = new Object[cardsTempList.size()][5];
@@ -592,6 +605,9 @@ public class CardsSwingUI extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nameSearch;
     private javax.swing.JScrollPane ownedCardScroll;

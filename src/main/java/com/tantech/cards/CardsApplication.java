@@ -63,6 +63,7 @@ public class CardsApplication implements CommandLineRunner {
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                     mainWindow.updateOwnedTable("", "", "", "", "");
+                    mainWindow.setTitle("Cards:The App");
                     mainWindow.setVisible(true);
                 }
             });
