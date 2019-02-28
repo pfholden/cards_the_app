@@ -64,6 +64,7 @@ public class CardsApplication implements CommandLineRunner {
                 public void run() {
                     mainWindow.updateOwnedTable("", "", "", "", "");
                     mainWindow.setTitle("Cards:The App");
+                    mainWindow.addNameSearchSuggestions();
                     mainWindow.setVisible(true);
                 }
             });

@@ -62,7 +62,7 @@ public class CardSearchService {
 
         BooleanJunction mj = queryBuilder.bool();
         boolean first = true;
-        if (!name.isEmpty()) {
+        if (name != null && !name.isEmpty()) {
             if (first) {
                 mj = queryBuilder.bool().must(queryBuilder.simpleQueryString()
                                 .onField("name").matching(name).createQuery());
@@ -72,7 +72,7 @@ public class CardSearchService {
                                 .onField("name").matching(name).createQuery());
             System.out.println("Added name: "+name);
         }
-        if (!text.isEmpty()) {
+        if (text != null && !text.isEmpty()) {
             if (first) {
                 mj = queryBuilder.bool().must(queryBuilder.simpleQueryString()
                                 .onField("text").matching(text).createQuery());
@@ -82,7 +82,7 @@ public class CardSearchService {
                                 .onField("text").matching(text).createQuery());
             System.out.println("Added text: "+text);
         }
-        if (!type.isEmpty()) {
+        if (type != null && !type.isEmpty()) {
             if (first) {
                 mj = queryBuilder.bool().must(queryBuilder.simpleQueryString()
                                 .onField("type").matching(type).createQuery());
@@ -92,7 +92,7 @@ public class CardSearchService {
                                 .onField("type").matching(type).createQuery());
             System.out.println("Added type: "+type);
         }
-        if (!colors.isEmpty()) {
+        if (colors != null && !colors.isEmpty()) {
             if (first) {
                 mj = queryBuilder.bool().must(queryBuilder.simpleQueryString()
                                 .onField("colors").matching(colors).createQuery());
@@ -102,7 +102,7 @@ public class CardSearchService {
                                 .onField("colors").matching(colors).createQuery());
             System.out.println("Added colors: "+colors);
         }
-        if (!setname.isEmpty()) {
+        if (setname != null && !setname.isEmpty()) {
             if (first) {
                 mj = queryBuilder.bool().must(queryBuilder.simpleQueryString()
                                 .onField("setname").matching(setname).createQuery());

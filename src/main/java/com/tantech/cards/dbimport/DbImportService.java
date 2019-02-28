@@ -44,12 +44,11 @@ public class DbImportService {
 
                 boolean done = false;
                 if(newCardMaster == null && !done){
-                    // Try other options
+                    // Try other options. Need to figure out how to import split cards
                     // Try first by Set Code and Card Number
-                    newCardMaster = cardRepository.findBySetCodeAndNumber(newSetCode, importCard.getCardNumber());
+                    newCardMaster = cardRepository.findFirstBySetCodeAndNumber(newSetCode, importCard.getCardNumber());
                     if (newCardMaster == null){
-                        // Other options will go here later. Need to figure out how to 
-                        // import split cards
+                        // Other options will go here later. 
                         done = true;
                     }
                 }                

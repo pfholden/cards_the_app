@@ -30,7 +30,7 @@ public interface CardRepository extends CrudRepository<Card, Integer> {
     
     public Card findByNameAndSetCode(String name, String setCode);
     
-    public Card findBySetCodeAndNumber(String setCode, String cardNumber);
+    public Card findFirstBySetCodeAndNumber(String setCode, String cardNumber);
     
     @Query("select distinct u.name from Card u ")
     List<String> findByAsArrayAndSort(Sort sort);

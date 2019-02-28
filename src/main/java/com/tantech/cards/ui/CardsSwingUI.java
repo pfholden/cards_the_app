@@ -8,17 +8,27 @@ package com.tantech.cards.ui;
 import com.tantech.cards.db.Card;
 import com.tantech.cards.db.CardRepository;
 import com.tantech.cards.db.OwnedCard;
+import com.tantech.cards.dbimport.DbImportService;
 import com.tantech.cards.search.CardSearchService;
 import com.tantech.cards.utils.MtgSymbolConvert;
+import com.tantech.cards.utils.MyComboBox;
+import com.tantech.cards.utils.StringSearchable;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -43,11 +53,148 @@ public class CardsSwingUI extends javax.swing.JFrame {
     @Autowired
     private CardRepository cardRepo;
     
+    @Autowired
+    private DbImportService dbImportService;
+    
+    StringSearchable searchable;
+    MyComboBox combo;
+    boolean nameSelected = false;
+    
     /**
      * Creates new form CardsSwingUI
      */
     public CardsSwingUI() {
         initComponents();
+        
+        nameSearch.getEditor().getEditorComponent().addKeyListener(new java.awt.event.KeyAdapter() {
+             public void keyTyped(java.awt.event.KeyEvent evt) {
+                 nameSearchKeyTyped(evt);
+             }
+         });
+        
+//        List<String> cardNames = new ArrayList<>();
+//        
+//        searchable = new StringSearchable(cardNames);
+//        combo = new MyComboBox(nameSearch, searchable);
+        
+      /*  
+        nameSearch.setModel(new DefaultComboBoxModel());
+        nameSearch.setEditable(true);
+        nameSearch.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXX");
+        nameSearch.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                System.out.println("ItemStateChanged fired: "+e.getStateChange());
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    nameSearch.setPopupVisible(false);
+                    nameSelected = true;
+                } else {
+                    nameSearch.setPopupVisible(true);
+                    nameSelected = false;
+                }
+            }
+        });
+        Component c = nameSearch.getEditor().getEditorComponent();
+        if ( c instanceof JTextComponent ){
+            final JTextComponent tc = (JTextComponent)c;
+
+            tc.addKeyListener(new java.awt.event.KeyAdapter() {
+                public void keyTyped(java.awt.event.KeyEvent evt) {
+                    nameSearchKeyTyped(evt);
+                }
+            });
+            tc.getDocument().addDocumentListener(new DocumentListener(){
+
+                @Override
+                public void changedUpdate(DocumentEvent arg0) {}
+
+                @Override
+                public void insertUpdate(DocumentEvent arg0) {
+                    update();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent arg0) {
+                    update();
+                }
+
+                public void update(){
+                    //perform separately, as listener conflicts between the editing component
+                    //and JComboBox will result in an IllegalStateException due to editing 
+                    //the component when it is locked. 
+                    SwingUtilities.invokeLater(new Runnable(){
+
+                        @Override
+                        public void run() {
+                                List<String> founds = new ArrayList<String>(searchable.search(tc.getText().toLowerCase()));
+                                Set<String> foundSet = new HashSet<String>();
+                                for ( String s : founds ){
+                                        foundSet.add(s.toLowerCase());
+                                }
+                                Collections.sort(founds);//sort alphabetically
+
+
+                                nameSearch.setEditable(false);
+                                nameSearch.removeAllItems();
+                                //if founds contains the search text, then only add once.
+                                if ( !foundSet.contains( tc.getText().toLowerCase()) ){
+                                        nameSearch.addItem( tc.getText() );
+                                }
+
+                                for (String s : founds) {
+                                        nameSearch.addItem(s);
+                                }
+                                nameSearch.setEditable(true);
+//                                    nameSearch.setPopupVisible(true);
+                                tc.requestFocus(); 
+                        }
+
+                    });
+
+                }
+
+            });
+            //When the text component changes, focus is gained 
+            //and the menu disappears. To account for this, whenever the focus
+            //is gained by the JTextComponent and it has searchable values, we show the popup.
+            tc.addFocusListener(new FocusListener(){
+
+                @Override
+                public void focusGained(FocusEvent arg0) {
+                        if ( tc.getText().length() >= 3 ){
+                            nameSearch.setPopupVisible(!nameSelected);
+                        }else{
+                            nameSearch.setPopupVisible(false);
+                        }
+                }
+
+                @Override
+                public void focusLost(FocusEvent arg0) {						
+                }
+
+            });
+        }else{
+                throw new IllegalStateException("Editing component is not a JTextComponent!");
+        }*/
+	
+//        combo = new AutocompleteJComboBox(searchable);
+//		
+//        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+//        jPanel3.setLayout(jPanel3Layout);
+//        jPanel3Layout.setHorizontalGroup(
+//            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//            .addGroup(jPanel3Layout.createSequentialGroup()
+//                .addGap(16, 16, 16)
+//                .addComponent(combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+//        );
+//        jPanel3Layout.setVerticalGroup(
+//            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//            .addGroup(jPanel3Layout.createSequentialGroup()
+//                .addContainerGap()
+//                .addComponent(combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addContainerGap(128, Short.MAX_VALUE))
+//        );
     }
 
     /**
@@ -70,6 +217,7 @@ public class CardsSwingUI extends javax.swing.JFrame {
         ownedCardScroll = new javax.swing.JScrollPane();
         ownedCardTable = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
+        nameSearch1 = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         clearButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -79,12 +227,17 @@ public class CardsSwingUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         typeSearch = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        nameSearch = new javax.swing.JTextField();
         textSearch = new javax.swing.JTextField();
         ownedCheckBox = new javax.swing.JCheckBox();
+        nameSearch = new javax.swing.JComboBox<>();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
+        toolsMenu = new javax.swing.JMenu();
+        importCsv = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        updateDbMenu = new javax.swing.JMenuItem();
+        reindexSearch = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -132,17 +285,9 @@ public class CardsSwingUI extends javax.swing.JFrame {
         CardTab.setName(""); // NOI18N
 
         allCardTable.setAutoCreateRowSorter(true);
-        allCardTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        allCardTable.setModel(new OwnedCardsModel(new Object [][] {
+            {"", "", "", "", ""}
+        }));
         //This is the post-listener code area
 
         allCardTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -178,15 +323,32 @@ public class CardsSwingUI extends javax.swing.JFrame {
 
         CardTab.addTab("Owned Cards", ownedCardScroll);
 
+        nameSearch1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nameSearch1ActionPerformed(evt);
+            }
+        });
+        nameSearch1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nameSearch1KeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(nameSearch1)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 159, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addComponent(nameSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(89, Short.MAX_VALUE))
         );
 
         clearButton.setText("Clear");
@@ -224,12 +386,6 @@ public class CardsSwingUI extends javax.swing.JFrame {
 
         jLabel2.setText("Text:");
 
-        nameSearch.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                nameSearchKeyTyped(evt);
-            }
-        });
-
         textSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 textSearchKeyTyped(evt);
@@ -240,6 +396,18 @@ public class CardsSwingUI extends javax.swing.JFrame {
         ownedCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ownedCheckBoxActionPerformed(evt);
+            }
+        });
+
+        nameSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        nameSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nameSearchActionPerformed(evt);
+            }
+        });
+        nameSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nameSearchKeyTyped(evt);
             }
         });
 
@@ -259,17 +427,18 @@ public class CardsSwingUI extends javax.swing.JFrame {
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(ownedCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clearButton))
-                    .addComponent(typeSearch, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(colorSearch, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(textSearch)
-                    .addComponent(nameSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(ownedCheckBox)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(searchButton)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(clearButton))
+                        .addComponent(typeSearch, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(colorSearch, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(textSearch))
+                    .addComponent(nameSearch, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -277,8 +446,8 @@ public class CardsSwingUI extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(nameSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -317,7 +486,7 @@ public class CardsSwingUI extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(CardTab, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
+                .addComponent(CardTab, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -330,6 +499,35 @@ public class CardsSwingUI extends javax.swing.JFrame {
 
         jMenu2.setText("Edit");
         jMenuBar1.add(jMenu2);
+
+        toolsMenu.setText("Tools");
+
+        importCsv.setText("Import CSV");
+        importCsv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importCsvActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(importCsv);
+        toolsMenu.add(jSeparator1);
+
+        updateDbMenu.setText("Update DB");
+        updateDbMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateDbMenuActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(updateDbMenu);
+
+        reindexSearch.setText("Re-Index Search");
+        reindexSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reindexSearchActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(reindexSearch);
+
+        jMenuBar1.add(toolsMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -357,53 +555,213 @@ public class CardsSwingUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ownedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ownedCheckBoxActionPerformed
+    
+    public void addNameSearchSuggestions(){
+        nameSearch.setModel(new javax.swing.DefaultComboBoxModel<>(
+                new Vector<String>(this.cardSearchService.searchNames())));
+        combo = new MyComboBox(nameSearch);
         
+//        searchable = new StringSearchable(this.cardSearchService.searchNames());
+//	combo = new AutocompleteJComboBox(searchable);
+//		
+//        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+//        jPanel3.setLayout(jPanel3Layout);
+//        jPanel3Layout.setHorizontalGroup(
+//            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//            .addGroup(jPanel3Layout.createSequentialGroup()
+//                .addGap(16, 16, 16)
+//                .addComponent(combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+//        );
+//        jPanel3Layout.setVerticalGroup(
+//            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//            .addGroup(jPanel3Layout.createSequentialGroup()
+//                .addContainerGap()
+//                .addComponent(combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addContainerGap(128, Short.MAX_VALUE))
+//        );
+    }
+    private void ownedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ownedCheckBoxActionPerformed
+        if (ownedCheckBox.isSelected()){
+            searchButton.setEnabled(true);
+        }else{
+            searchButton.setEnabled(false);
+        }
     }//GEN-LAST:event_ownedCheckBoxActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        performSearch();
+    }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        nameSearch.setSelectedIndex(-1);
+        textSearch.setText("");
+        typeSearch.setText("");
+        colorSearch.setText("");
+        ownedCheckBox.setSelected(false);
+        searchButton.setEnabled(false);
+    }//GEN-LAST:event_clearButtonActionPerformed
+
+    private void nameSearch1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameSearch1KeyTyped
+        if (nameSearch1.getText().length()>0){
+            if(!searchButton.isEnabled()){
+                searchButton.setEnabled(true);
+            }else{
+                if (evt.getID() == KeyEvent.KEY_TYPED) {
+                    if((evt.getKeyChar() == KeyEvent.VK_ENTER)&&searchButton.isEnabled()){
+                        performSearch();
+                    }
+                }
+            }
+        }else{
+            if(searchButton.isEnabled()){
+                searchButton.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_nameSearch1KeyTyped
+
+    private void textSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textSearchKeyTyped
+       if (textSearch.getText().length()>0){
+            if(!searchButton.isEnabled()){
+                searchButton.setEnabled(true);
+            }else{
+                if (evt.getID() == KeyEvent.KEY_TYPED) {
+                    if((evt.getKeyChar() == KeyEvent.VK_ENTER)&&searchButton.isEnabled()){
+                        performSearch();
+                    }
+                }
+            }
+        }else{
+            if(searchButton.isEnabled()){
+                searchButton.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_textSearchKeyTyped
+
+    private void typeSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_typeSearchKeyTyped
+       if (typeSearch.getText().length()>0){
+            if(!searchButton.isEnabled()){
+                searchButton.setEnabled(true);
+            }else{
+                if (evt.getID() == KeyEvent.KEY_TYPED) {
+                    if((evt.getKeyChar() == KeyEvent.VK_ENTER)&&searchButton.isEnabled()){
+                        performSearch();
+                    }
+                }
+            }
+        }else{
+            if(searchButton.isEnabled()){
+                searchButton.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_typeSearchKeyTyped
+
+    private void colorSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_colorSearchKeyTyped
+        if (colorSearch.getText().length()>0){
+            if(!searchButton.isEnabled()){
+                searchButton.setEnabled(true);
+            }else{
+                if (evt.getID() == KeyEvent.KEY_TYPED) {
+                    if((evt.getKeyChar() == KeyEvent.VK_ENTER)&&searchButton.isEnabled()){
+                        performSearch();
+                    }
+                }
+            }
+        }else{
+            if(searchButton.isEnabled()){
+                searchButton.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_colorSearchKeyTyped
+
+    private void updateDbMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateDbMenuActionPerformed
+        Thread t=new Thread(new Runnable() {
+            public void run() {
+                try {                    
+                    dbImportService.importDb();
+                } catch (IOException ex) {
+                    Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        t.start();
+    }//GEN-LAST:event_updateDbMenuActionPerformed
+
+    private void reindexSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reindexSearchActionPerformed
+        Thread t=new Thread(new Runnable() {
+            public void run() {
+                try {
+                    cardSearchService.reloadIndex();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        t.start();
+    }//GEN-LAST:event_reindexSearchActionPerformed
+
+    private void importCsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importCsvActionPerformed
+        JFileChooser fc = new JFileChooser();
+        int returnVal = fc.showOpenDialog(CardsSwingUI.this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            System.out.println("File: "+file.getName());
+            try {
+                dbImportService.importOwnedCsv(file.getAbsolutePath());
+            } catch (IOException ex) {
+                Logger.getLogger(AppWindowUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            JOptionPane.showMessageDialog(jPanel4, "Import cards complete");
+
+        }               
+    }//GEN-LAST:event_importCsvActionPerformed
+
+    private void nameSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameSearchActionPerformed
         // TODO add your handling code here:
+    }//GEN-LAST:event_nameSearchActionPerformed
+
+    private void nameSearch1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameSearch1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nameSearch1ActionPerformed
+
+    private void nameSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameSearchKeyTyped
+        if ((nameSearch.getSelectedItem() != null) && ((String) nameSearch.getSelectedItem()).length()>0){
+            if(!searchButton.isEnabled()){
+                searchButton.setEnabled(true);
+            }else{
+                if (evt.getID() == KeyEvent.KEY_TYPED) {
+                    if((evt.getKeyChar() == KeyEvent.VK_ENTER)&&searchButton.isEnabled()){
+                        performSearch();
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_nameSearchKeyTyped
+
+    private void performSearch(){
         if (ownedCheckBox.isSelected()){
-            updateOwnedTable(nameSearch.getText(), textSearch.getText(), 
+            updateOwnedTable((String) nameSearch.getSelectedItem(), textSearch.getText(), 
                     typeSearch.getText(), colorSearch.getText(), "");
             ownedCardTable.revalidate();
             CardTab.setSelectedIndex(1);
         } else{
-            updateAllTable(nameSearch.getText(), textSearch.getText(), 
+            updateAllTable((String) nameSearch.getSelectedItem(), textSearch.getText(), 
                     typeSearch.getText(), colorSearch.getText(), "");
             allCardTable.revalidate();
             CardTab.setSelectedIndex(0);
         }
-    }//GEN-LAST:event_searchButtonActionPerformed
-
-    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
-        nameSearch.setText("");
-        textSearch.setText("");
-        typeSearch.setText("");
-        colorSearch.setText("");
-        searchButton.setEnabled(false);
-    }//GEN-LAST:event_clearButtonActionPerformed
-
-    private void nameSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameSearchKeyTyped
-        if(!searchButton.isEnabled()) searchButton.setEnabled(true);
-    }//GEN-LAST:event_nameSearchKeyTyped
-
-    private void textSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textSearchKeyTyped
-        if(!searchButton.isEnabled()) searchButton.setEnabled(true);
-    }//GEN-LAST:event_textSearchKeyTyped
-
-    private void typeSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_typeSearchKeyTyped
-        if(!searchButton.isEnabled()) searchButton.setEnabled(true);
-    }//GEN-LAST:event_typeSearchKeyTyped
-
-    private void colorSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_colorSearchKeyTyped
-        if(!searchButton.isEnabled()) searchButton.setEnabled(true);
-    }//GEN-LAST:event_colorSearchKeyTyped
-
+    }
+    
+    
     private void displaySingleCard(Integer cardId){
+        
+        // TODO: need to work on various format of cards. For example, split cards.
+        //   These could be displayed and then have a click to swap to show the 
+        //   other card text. 
         Card lookupCard =  cardRepo.findByCardId((Integer) cardId);
         
-        if ( !lookupCard.getImageUrl().isEmpty()){
+        if ( lookupCard.getImageUrl() != null){
             URL url=null;
 
             try {
@@ -482,7 +840,8 @@ public class CardsSwingUI extends javax.swing.JFrame {
                 }
             }
             lsm.clearSelection();
-            displaySingleCard((Integer) allCardTable.getModel().getValueAt(selectedRow,4));
+            displaySingleCard((Integer) allCardTable.getModel()
+                    .getValueAt(allCardTable.convertRowIndexToModel(selectedRow),4));
         } 
     }
     
@@ -503,7 +862,8 @@ public class CardsSwingUI extends javax.swing.JFrame {
             }
             lsm.clearSelection();     
             
-            displaySingleCard((Integer) ownedCardTable.getModel().getValueAt(selectedRow,4));
+            displaySingleCard((Integer) ownedCardTable.getModel()
+                    .getValueAt(ownedCardTable.convertRowIndexToModel(selectedRow),4));
         }
     }
     
@@ -557,8 +917,6 @@ public class CardsSwingUI extends javax.swing.JFrame {
         if (columnModel.getColumnIndex((Object) columName) >= 0){
             columnModel.removeColumn(columnModel.getColumn(columnModel.getColumnIndex((Object) "Card ID")));
         }
-//        ListSelectionModel lsm = ownedCardTable.getSelectionModel();
-//        lsm.clearSelection();
     }
     
     public void updateAllTable(String name, String text, String type, String colors, String set){
@@ -597,6 +955,7 @@ public class CardsSwingUI extends javax.swing.JFrame {
     private javax.swing.JTextPane cardTextPane;
     private javax.swing.JButton clearButton;
     private javax.swing.JTextField colorSearch;
+    private javax.swing.JMenuItem importCsv;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -609,12 +968,17 @@ public class CardsSwingUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField nameSearch;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JComboBox<String> nameSearch;
+    private javax.swing.JTextField nameSearch1;
     private javax.swing.JScrollPane ownedCardScroll;
     private javax.swing.JTable ownedCardTable;
     private javax.swing.JCheckBox ownedCheckBox;
+    private javax.swing.JMenuItem reindexSearch;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextField textSearch;
+    private javax.swing.JMenu toolsMenu;
     private javax.swing.JTextField typeSearch;
+    private javax.swing.JMenuItem updateDbMenu;
     // End of variables declaration//GEN-END:variables
 }
