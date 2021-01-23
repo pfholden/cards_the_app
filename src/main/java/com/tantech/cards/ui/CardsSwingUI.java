@@ -19,13 +19,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -65,6 +64,8 @@ public class CardsSwingUI extends javax.swing.JFrame {
      */
     public CardsSwingUI() {
         initComponents();
+        
+        setupTable(allCardTable);
         
         nameSearch.getEditor().getEditorComponent().addKeyListener(new java.awt.event.KeyAdapter() {
              public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -246,7 +247,7 @@ public class CardsSwingUI extends javax.swing.JFrame {
 
         cardImageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         cardImageLabel.setAlignmentX(0.5F);
-        cardImageLabel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        cardImageLabel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
         cardImageLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         cardImageLabel.setPreferredSize(new java.awt.Dimension(254, 330));
 
@@ -255,7 +256,7 @@ public class CardsSwingUI extends javax.swing.JFrame {
         jScrollPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         cardTextPane.setEditable(false);
-        cardTextPane.setBorder(null);
+        cardTextPane.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         cardTextPane.setAutoscrolls(false);
         cardTextPane.setMargin(new java.awt.Insets(10, 10, 10, 10));
         cardTextPane.setPreferredSize(new java.awt.Dimension(250, 100));
@@ -285,9 +286,11 @@ public class CardsSwingUI extends javax.swing.JFrame {
         CardTab.setName(""); // NOI18N
 
         allCardTable.setAutoCreateRowSorter(true);
-        allCardTable.setModel(new OwnedCardsModel(new Object [][] {
-            {"", "", "", "", ""}
+        allCardTable.setModel(new AllCardsModel(new Object [][] {
+            {"", "", "", "", "", "", ""}
         }));
+        allCardTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        allCardTable.setMinimumSize(new java.awt.Dimension(600, 0));
         //This is the post-listener code area
 
         allCardTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -305,9 +308,10 @@ public class CardsSwingUI extends javax.swing.JFrame {
 
         ownedCardTable.setAutoCreateRowSorter(true);
         ownedCardTable.setModel(new OwnedCardsModel(new Object [][] {
-            {"a", "b", "c", 1, 1},
-            {"a", "b", "c", 1, 1},
+            {"", "", "", "", "", "", ""}
         }));
+        ownedCardTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        ownedCardTable.setMinimumSize(new java.awt.Dimension(600, 0));
         //This is the post-listener code area
 
         ownedCardTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -352,6 +356,7 @@ public class CardsSwingUI extends javax.swing.JFrame {
         );
 
         clearButton.setText("Clear");
+        clearButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         clearButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearButtonActionPerformed(evt);
@@ -369,6 +374,7 @@ public class CardsSwingUI extends javax.swing.JFrame {
         });
 
         searchButton.setText("Search");
+        searchButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         searchButton.setEnabled(false);
         searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -399,7 +405,9 @@ public class CardsSwingUI extends javax.swing.JFrame {
             }
         });
 
+        nameSearch.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         nameSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        nameSearch.setMinimumSize(new java.awt.Dimension(69, 23));
         nameSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nameSearchActionPerformed(evt);
@@ -444,10 +452,11 @@ public class CardsSwingUI extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(nameSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1))
+                    .addComponent(nameSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -486,7 +495,7 @@ public class CardsSwingUI extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(CardTab, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                .addComponent(CardTab, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -581,6 +590,21 @@ public class CardsSwingUI extends javax.swing.JFrame {
 //                .addContainerGap(128, Short.MAX_VALUE))
 //        );
     }
+    
+    private void setupTable(javax.swing.JTable table){
+        TableColumnModel columnModel = table.getColumnModel();
+        String columName = "Name";
+        if (columnModel.getColumnIndex((Object) columName) >= 0){
+            columnModel.removeColumn(columnModel.getColumn(columnModel.getColumnIndex((Object) "Card ID")));
+        }
+        columnModel.getColumn(0).setPreferredWidth(200);    //Name
+        columnModel.getColumn(1).setPreferredWidth(200);    //Colors
+        columnModel.getColumn(2).setPreferredWidth(200);    //Type
+        columnModel.getColumn(3).setPreferredWidth(100);    //Power
+        columnModel.getColumn(4).setPreferredWidth(100);    //Toughness
+        columnModel.getColumn(5).setPreferredWidth(100);    //CMC
+    }
+    
     private void ownedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ownedCheckBoxActionPerformed
         if (ownedCheckBox.isSelected()){
             searchButton.setEnabled(true);
@@ -706,7 +730,7 @@ public class CardsSwingUI extends javax.swing.JFrame {
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            System.out.println("File: "+file.getName());
+            //System.out.println("File: "+file.getName());
             try {
                 dbImportService.importOwnedCsv(file.getAbsolutePath());
             } catch (IOException ex) {
@@ -759,66 +783,78 @@ public class CardsSwingUI extends javax.swing.JFrame {
         // TODO: need to work on various format of cards. For example, split cards.
         //   These could be displayed and then have a click to swap to show the 
         //   other card text. 
-        Card lookupCard =  cardRepo.findByCardId((Integer) cardId);
         
-        if ( lookupCard.getImageUrl() != null){
-            URL url=null;
+        //Make sure cardId is not null or empty.
+        if (cardId >= 0){
+            Card lookupCard =  cardRepo.findByCardId((Integer) cardId);
 
-            try {
-    //            System.out.println("Image: "+lookupCard.getImageUrl());
-                url = new URL(lookupCard.getImageUrl());
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            BufferedImage image;
-            try {
-                image = ImageIO.read(url);
-                
-                ImageIcon cardImage = new ImageIcon(image);
-                cardImageLabel.setIcon(new ImageIcon(image));
-            } catch (IOException ex) {
-                Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        
-        StyledDocument doc = (StyledDocument) cardTextPane.getDocument();
-        Style iconStyle = doc.addStyle("StyleName", null);
-        Style textStyle = doc.addStyle("TextStyle", null);
-        
-        try {
-            doc.remove(0, doc.getLength());
-                
-            // If cardName is not empty, add to cardTextPane
-            if (lookupCard.getName() != null){
-                StyleConstants.setBold(textStyle, true);
-                doc.insertString(doc.getLength(), lookupCard.getName()+"\n\n", textStyle);
-                StyleConstants.setBold(textStyle, false);
+           // System.out.println("Card image URL: "+ lookupCard.getImageUrl());
+
+            if ( lookupCard.getImageUrl() != null){
+                URL url=null;
+
+                try {
+                    url = new URL(lookupCard.getImageUrl().replace("http:", "https:"));
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                BufferedImage image;
+                try {
+                    image = ImageIO.read(url);
+                    cardImageLabel.setIcon(new ImageIcon(image));
+                } catch (IOException ex) {
+                    Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                cardImageLabel.setIcon(new ImageIcon());
+                cardImageLabel.setText("No image available");
             }
 
-            // If cardText is not empty, add to cardTextPane
-            if (lookupCard.getText() != null){
-                Map<String, String> textMap = MtgSymbolConvert.parseManaSymbols(lookupCard.getText()); 
-                for(Map.Entry<String, String> entry : textMap.entrySet()){
-                    System.out.println(entry);
-                    if(entry.getKey().startsWith("image")){
-                        //Set the image icon style to the appropriate icon
-                        StyleConstants.setIcon(iconStyle, createImageIcon(entry.getValue(), ""));
-                        doc.insertString(doc.getLength(), "ignored text", iconStyle);
-                    } else {
-                        doc.insertString(doc.getLength(), entry.getValue(), textStyle);
+
+            StyledDocument doc = (StyledDocument) cardTextPane.getStyledDocument();
+            Style iconStyle = doc.addStyle("StyleName", null);
+            Style textStyle = doc.addStyle("TextStyle", null);
+            StyleConstants.setFontSize(textStyle, 14);
+
+            try {
+                doc.remove(0, doc.getLength());
+
+                // If cardName is not empty, add to cardTextPane
+                if (lookupCard.getName() != null){
+                    StyleConstants.setBold(textStyle, true);
+                    doc.insertString(doc.getLength(), lookupCard.getName()+"\n\n", textStyle);
+                    StyleConstants.setBold(textStyle, false);
+                }
+
+                // If cardText is not empty, add to cardTextPane
+                if (lookupCard.getText() != null){
+                    Map<String, String> textMap = MtgSymbolConvert.parseManaSymbols(lookupCard.getText()); 
+                    for(Map.Entry<String, String> entry : textMap.entrySet()){
+                        //System.out.println(entry);
+                        if(entry.getKey().startsWith("image")){
+                            //Set the image icon style to the appropriate icon
+                            StyleConstants.setIcon(iconStyle, createImageIcon(entry.getValue(), ""));
+
+                            doc.insertString(doc.getLength(), "ignored text", iconStyle);
+                            int fontSize = StyleConstants.getFontSize(textStyle);
+                            StyleConstants.setFontSize(textStyle, 5);
+                            doc.insertString(doc.getLength(), " ", textStyle);
+                            StyleConstants.setFontSize(textStyle, fontSize);
+                        } else {
+                            doc.insertString(doc.getLength(), entry.getValue(), textStyle);
+                        }
                     }
                 }
+                // If cardFlavor text is not empty, add to cardTextPane
+                if (lookupCard.getFlavor() != null){
+                    StyleConstants.setItalic(textStyle, true);
+                    doc.insertString(doc.getLength(), "\n\n"+lookupCard.getFlavor(), textStyle);
+                    StyleConstants.setItalic(textStyle, false);
+                }
+                cardTextPane.setCaretPosition(0);
+            }catch (BadLocationException ex) {
+                Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-            // If cardText is not empty, add to cardTextPane
-            if (lookupCard.getFlavor() != null){
-                StyleConstants.setItalic(textStyle, true);
-                doc.insertString(doc.getLength(), "\n\n"+lookupCard.getFlavor(), textStyle);
-                StyleConstants.setItalic(textStyle, false);
-            }
-            cardTextPane.setCaretPosition(0);
-        }catch (BadLocationException ex) {
-            Logger.getLogger(CardsSwingUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -841,7 +877,7 @@ public class CardsSwingUI extends javax.swing.JFrame {
             }
             lsm.clearSelection();
             displaySingleCard((Integer) allCardTable.getModel()
-                    .getValueAt(allCardTable.convertRowIndexToModel(selectedRow),4));
+                    .getValueAt(allCardTable.convertRowIndexToModel(selectedRow),6));
         } 
     }
     
@@ -863,7 +899,7 @@ public class CardsSwingUI extends javax.swing.JFrame {
             lsm.clearSelection();     
             
             displaySingleCard((Integer) ownedCardTable.getModel()
-                    .getValueAt(ownedCardTable.convertRowIndexToModel(selectedRow),4));
+                    .getValueAt(ownedCardTable.convertRowIndexToModel(selectedRow),6));
         }
     }
     
@@ -894,57 +930,75 @@ public class CardsSwingUI extends javax.swing.JFrame {
         clearCardDisplay();
         
         java.util.List<OwnedCard> cardsTempList = cardSearchService.searchOwnedCards(name, text, type, colors, set);
-        		
-        Object[][] data = new Object[cardsTempList.size()][5];
-        int i = 0;
-        for(OwnedCard card:cardsTempList) {
-                int j = 0;
-                
-                data[i][j++] = card.getCardMaster().getName();
-                data[i][j++] = card.getCardMaster().getColors();
-                data[i][j++] = card.getCardMaster().getText();
-                data[i][j++] = card.getCardMaster().getCmc();
-                data[i][j++] = card.getCardMaster().getCardId();
+        
+        Object[][] data = new Object[1][7];
+        
+        if (cardsTempList.size() > 0){
+            data = new Object[cardsTempList.size()][7];
+            int i = 0;       
+        
+            for(OwnedCard card:cardsTempList) {
+                    int j = 0;
 
-                i++;
+                    data[i][j++] = card.getCardMaster().getName();
+                    data[i][j++] = card.getCardMaster().getColors();
+                    data[i][j++] = card.getCardMaster().getType();
+                    data[i][j++] = card.getCardMaster().getPower();
+                    data[i][j++] = card.getCardMaster().getToughness();
+                    data[i][j++] = card.getCardMaster().getCmc();
+                    data[i][j++] = card.getCardMaster().getCardId();
+
+                    i++;
+            }
+        }else{            
+            data[0][0]="Nothing found...";
+            data[0][6]=-1;
+            for(int i=1; i<6; i++){
+                data[0][i] = "";
+            }
         }
         
         OwnedCardsModel updatedModel = new OwnedCardsModel(data);
         ownedCardTable.setModel(updatedModel);
         
-        TableColumnModel columnModel = ownedCardTable.getColumnModel();
-        String columName = "Name";
-        if (columnModel.getColumnIndex((Object) columName) >= 0){
-            columnModel.removeColumn(columnModel.getColumn(columnModel.getColumnIndex((Object) "Card ID")));
-        }
+        setupTable(ownedCardTable);
     }
     
     public void updateAllTable(String name, String text, String type, String colors, String set){
         clearCardDisplay();
         java.util.List<Card> cardsTempList = cardSearchService.searchCards(name, text, type, colors, set);
-        		
-        Object[][] data = new Object[cardsTempList.size()][5];
-        int i = 0;
-        for(Card card:cardsTempList) {
-                int j = 0;
-                
-                data[i][j++] = card.getName();
-                data[i][j++] = card.getColors();
-                data[i][j++] = card.getText();
-                data[i][j++] = card.getCmc();
-                data[i][j++] = card.getCardId();
+        
+        Object[][] data = new Object[1][7];
+        
+        if (cardsTempList.size() > 0){
+            data = new Object[cardsTempList.size()][7];
+            int i = 0;
+            if (cardsTempList.size() > 0){
+                for(Card card:cardsTempList) {
+                        int j = 0;
 
-                i++;
+                        data[i][j++] = card.getName();
+                        data[i][j++] = card.getColors();
+                        data[i][j++] = card.getType();
+                        data[i][j++] = (card.getPower() != null ? card.getPower():"");
+                        data[i][j++] = (card.getToughness() != null ? card.getToughness():"");
+                        data[i][j++] = card.getCmc();
+                        data[i][j++] = card.getCardId();
+
+                        i++;
+                }
+            }
+        }else{            
+            data[0][0]="Nothing found...";
+            data[0][6]=-1;
+            for(int i=1; i<6; i++){
+                data[0][i] = "";
+            }
         }
         
         AllCardsModel updatedModel = new AllCardsModel(data);
         allCardTable.setModel(updatedModel);
-        
-        TableColumnModel columnModel = allCardTable.getColumnModel();
-        String columName = "Name";
-        if (columnModel.getColumnIndex((Object) columName) >= 0){
-            columnModel.removeColumn(columnModel.getColumn(columnModel.getColumnIndex((Object) "Card ID")));
-        }
+        setupTable(allCardTable);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -12,7 +12,7 @@ import javax.swing.table.AbstractTableModel;
  * @author pfholden
  */
 public class AllCardsModel extends AbstractTableModel {
-    private String[] columnNames = {"Name", "Colors", "Text", "Mana Cost", "Card ID"};
+    private String[] columnNames = {"Name", "Colors", "Type", "Power", "Toughness", "Mana Cost", "Card ID"};
     private Object[][] data; 
 
     public AllCardsModel(Object[][] data) {

@@ -70,7 +70,7 @@ public class CardSearchService {
             }
             else mj.must(queryBuilder.simpleQueryString()
                                 .onField("name").matching(name).createQuery());
-            System.out.println("Added name: "+name);
+            //System.out.println("Added name: "+name);
         }
         if (text != null && !text.isEmpty()) {
             if (first) {
@@ -80,7 +80,7 @@ public class CardSearchService {
             }
             else mj.must(queryBuilder.simpleQueryString()
                                 .onField("text").matching(text).createQuery());
-            System.out.println("Added text: "+text);
+            //System.out.println("Added text: "+text);
         }
         if (type != null && !type.isEmpty()) {
             if (first) {
@@ -90,7 +90,7 @@ public class CardSearchService {
             }
             else mj.must(queryBuilder.simpleQueryString()
                                 .onField("type").matching(type).createQuery());
-            System.out.println("Added type: "+type);
+            //System.out.println("Added type: "+type);
         }
         if (colors != null && !colors.isEmpty()) {
             if (first) {
@@ -100,7 +100,7 @@ public class CardSearchService {
             }
             else mj.must(queryBuilder.simpleQueryString()
                                 .onField("colors").matching(colors).createQuery());
-            System.out.println("Added colors: "+colors);
+            //System.out.println("Added colors: "+colors);
         }
         if (setname != null && !setname.isEmpty()) {
             if (first) {
@@ -110,7 +110,7 @@ public class CardSearchService {
             }
             else mj.must(queryBuilder.simpleQueryString()
                                 .onField("setname").matching(setname).createQuery());
-            System.out.println("Added setname: "+setname);
+            //System.out.println("Added setname: "+setname);
         }
         
         //If first still set all query values are empty. Just return all cards.
@@ -163,35 +163,35 @@ public class CardSearchService {
         BooleanJunction mj = queryBuilder.bool();
         boolean first = true;
         
-        if (!name.isEmpty()) {
+        if (name != null && !name.isEmpty()) {
             mj.must(queryBuilder.simpleQueryString()
                                 .onField("cardMaster.name").matching(name).createQuery());
             first = false;
-            System.out.println("Added name: "+name);
+            //System.out.println("Added name: "+name);
         }
-        if (!text.isEmpty()) {
+        if (text != null && !text.isEmpty()) {
             mj.must(queryBuilder.simpleQueryString()
                                 .onField("cardMaster.text").matching(text).createQuery());
             first = false;
-            System.out.println("Added text: "+text);
+            //System.out.println("Added text: "+text);
         }
-        if (!type.isEmpty()) {
+        if (type != null && !type.isEmpty()) {
             mj.must(queryBuilder.simpleQueryString()
                                 .onField("cardMaster.type").matching(type).createQuery());
             first = false;
-            System.out.println("Added type: "+type);
+            //System.out.println("Added type: "+type);
         }
-        if (!colors.isEmpty()) {
+        if (colors != null && !colors.isEmpty()) {
             mj.must(queryBuilder.simpleQueryString()
                                 .onField("cardMaster.colors").matching(colors).createQuery());
             first = false;
-            System.out.println("Added colors: "+colors);
+            //System.out.println("Added colors: "+colors);
         }
-        if (!setname.isEmpty()) {
+        if (setname != null && !setname.isEmpty()) {
             mj.must(queryBuilder.simpleQueryString()
                                 .onField("setName.name").matching(setname).createQuery());
             first = false;
-            System.out.println("Added setname: "+setname);
+            //System.out.println("Added setname: "+setname);
         }
 
         //If first still set all query values are empty. Just return all cards.

@@ -83,7 +83,7 @@ public class MtgSymbolConvert {
          */
         
         public static Map<String, String> parseManaSymbols(String inputText) {
-            System.out.println("In parse. Passed string: "+inputText);
+            //System.out.println("In parse. Passed string: "+inputText);
             
             Map<String, String> convertedText = new LinkedHashMap<>();
             int stringNum = 0;
