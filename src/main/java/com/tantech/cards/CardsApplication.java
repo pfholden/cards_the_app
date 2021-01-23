@@ -6,7 +6,7 @@ import com.tantech.cards.ui.CardsAppWindow;
 import com.tantech.cards.ui.CardsSwingUI;
 import static java.lang.System.exit;
 import java.util.Scanner;
-import org.apache.pivot.wtk.DesktopApplicationContext;
+//import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.beans.factory.annotation.Autowired;
