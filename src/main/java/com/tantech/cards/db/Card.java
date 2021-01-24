@@ -28,16 +28,19 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
@@ -57,7 +60,9 @@ import org.hibernate.search.annotations.Store;
 )
 @JsonIgnoreProperties
 @JsonRootName(value = "cards")
-public class Card implements Serializable{
+//public class Card implements Serializable{
+public class Card{
+
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO) 
     private Integer cardId;
@@ -70,7 +75,7 @@ public class Card implements Serializable{
     @SortableField (forField = "sortName")
     private String name;
     
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "other_names", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "other_names")
     private Set<String> names = new HashSet<>();
@@ -82,14 +87,14 @@ public class Card implements Serializable{
 //  On simple collections, add @Field with a name. This name can then be used in the search query.
     @IndexedEmbedded
     @Field(name="colors")
-    @ElementCollection
+    @ElementCollection (fetch = FetchType.EAGER)
     @CollectionTable(name = "card_colors", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "color")
     private Set<String> colors = new HashSet<>();
 
 //    @Field
     @IndexedEmbedded
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "colorIdentities", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "colorIdentity")
     private Set<String> colorIdentity = new HashSet<>();
@@ -99,21 +104,21 @@ public class Card implements Serializable{
     
 //    @Field
     @IndexedEmbedded
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "supertypes", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "supertype")
     private Set<String> supertypes = new HashSet<>();
     
 //    @Field
     @IndexedEmbedded
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "types", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "type")
     private Set<String> types = new HashSet<>();
     
 //    @Field
     @IndexedEmbedded
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "subtypes", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "subtype")
     private Set<String> subtypes = new HashSet<>();
@@ -127,7 +132,9 @@ public class Card implements Serializable{
     private String artist;
     private String number;
     private String power;
+    private Integer powerInt;
     private String toughness;
+    private Integer toughnessInt;
     private String loyalty;
     private int multiverseid = -1;
 //	private int[] variations;
@@ -157,16 +164,50 @@ public class Card implements Serializable{
       property = "setId")
     private MTGSet mtgSet;
     
-//	private String[] printings;
+    @IndexedEmbedded
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "printings", joinColumns = @JoinColumn(name = "card_id"))
+    @Column(name = "printing")
+    private Set<String> printings = new HashSet<>();
+
     private String imageUrl;
-//	private Legality[] legalities;
+    
+//    @IndexedEmbedded
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @CollectionTable(name = "legalities", joinColumns = @JoinColumn(name = "card_id"))
+//    @Column(name = "legality")
+//    private Set<String> legalities = new HashSet<>();
+
 //	private BigDecimal priceHigh;
 //	private BigDecimal priceMid;
 //	private BigDecimal priceLow;
 //	private BigDecimal onlinePriceHigh;
 //	private BigDecimal onlinePriceMid;
 //	private BigDecimal onlinePriceLow;
-//	private Ruling[] rulings;
+//    
+//    @IndexedEmbedded
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @CollectionTable(name = "rulings", joinColumns = @JoinColumn(name = "card_id"))
+//    @Column(name = "ruling")
+//    private Set<String> rulings = new HashSet<>();
+
+// mappedBy needs to be set to the field name from the other side of the relationship.    
+    @OneToMany(mappedBy="cardMaster", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class, 
+//        property = "ownedId")
+    private Set<OwnedCard> cardOwned;
+
+    
+    // Getters and Setters
+    
+    public Set<OwnedCard> getCardOwned() {
+        return cardOwned;
+    }
+
+    public void setCardOwned(Set<OwnedCard> cardOwned) {
+        this.cardOwned = cardOwned;
+    }
 
     public Integer getCardId() {
             return cardId;
@@ -329,6 +370,22 @@ public class Card implements Serializable{
             this.toughness = toughness;
     }
 
+    public Integer getPowerInt() {
+        return powerInt;
+    }
+
+    public void setPowerInt(Integer powerInt) {
+        this.powerInt = powerInt;
+    }
+
+    public Integer getToughnessInt() {
+        return toughnessInt;
+    }
+
+    public void setToughnessInt(Integer toughnessInt) {
+        this.toughnessInt = toughnessInt;
+    }
+
     public String getLoyalty() {
             return loyalty;
     }
@@ -481,14 +538,14 @@ public class Card implements Serializable{
             this.mtgSet = mtgSet;
     }
 
-//	public String[] getPrintings() {
-//		return printings;
-//	}
-//
-//	public void setPrintings(String[] printings) {
-//		this.printings = printings;
-//	}
-//
+    public Set<String> getPrintings() {
+        return printings;
+    }
+
+    public void setPrintings(Set<String> printings) {
+        this.printings = printings;
+    }
+
     public String getOriginalText() {
             return originalText;
     }
@@ -504,15 +561,6 @@ public class Card implements Serializable{
     public void setImageUrl(String imageUrl) {
             this.imageUrl = imageUrl;
     }
-//
-//	public Legality[] getLegalities() {
-//		return legalities;
-//	}
-//
-//	public void setLegalities(Legality[] legalities) {
-//		this.legalities = legalities;
-//	}
-//
 //	public BigDecimal getPriceHigh() {
 //		return priceHigh;
 //	}
@@ -561,11 +609,19 @@ public class Card implements Serializable{
 //		this.onlinePriceLow = onlinePriceLow;
 //	}
 
-//  public Ruling[] getRulings() {
-//    return rulings;
-//  }
+//    public Set<String> getRulings() {
+//        return rulings;
+//    }
 //
-//  public void setRulings(Ruling[] rulings) {
-//    this.rulings = rulings;
-//  }
+//    public void setRulings(Set<String> rulings) {
+//        this.rulings = rulings;
+//    }
+
+//    public Set<String> getLegalities() {
+//        return legalities;
+//    }
+//
+//    public void setLegalities(Set<String> legalities) {
+//        this.legalities = legalities;
+//    }
 }

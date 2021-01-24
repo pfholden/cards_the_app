@@ -5,10 +5,9 @@
  */
 package com.tantech.cards.db;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +15,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import static javax.persistence.TemporalType.TIMESTAMP;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.springframework.data.annotation.CreatedDate;
 
 /**
@@ -30,40 +32,33 @@ public class OwnedCard {
     @GeneratedValue(strategy=GenerationType.AUTO) 
     private Integer ownedId;
     
-//    @CsvBindByName(column = "Name")
-    
-//    @CsvBindAndJoinByName(column = "Name\\|Set", elementType = Card.class, 
-//            converter = CsvTextToCard.class, required = true)
-    @ManyToOne
+    @IndexedEmbedded
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name="cardId")
-    @JsonIdentityInfo(
-      generator = ObjectIdGenerators.PropertyGenerator.class, 
-      property = "cardId")
     private Card cardMaster;
     
-//    @CsvBindByName(column = "Set")
-//    @CsvCustomBindByName(column = "Name", converter = CsvTextToCard.class)
+    @IndexedEmbedded
     @ManyToOne
     @JoinColumn(name="setId")
-    @JsonIdentityInfo(
-      generator = ObjectIdGenerators.PropertyGenerator.class, 
-      property = "setId")
     private MTGSet setName;
     
+    @Field
     private String cardLocation;
     private boolean foil;
     
-//    @CsvBindByName(column = "Condition")
+    @Field
     private String cardCondition;
+    
+    @Field
     private Integer cardStars;
+    
+    @Field
     private String notes;
     
     @CreatedDate
     @Temporal(TIMESTAMP)
     private Date dateAdded = new Date();
     
-//    @CsvBindByName(column = "Price Each")
-//    @CsvNumber("$#.##")
     private Float pricePaid;
 
     public Float getPricePaid() {

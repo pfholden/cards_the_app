@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -82,7 +81,7 @@ public class GetAllCards {
 //        Need to add retry if call to HTTP server times out.
                 response = CLIENT.newCall(request).execute();
                 // @FIXME 
-                System.out.println("Downloading page"+i+" and adding to DB");
+                System.out.println("Downloading page "+i+" and adding to DB");
                 
 //                    Add pages to DB
                 newCardWrapper = mapper.readValue(response.body().string(), CardWrapper.class);    
