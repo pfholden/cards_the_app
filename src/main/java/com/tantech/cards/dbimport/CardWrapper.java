@@ -35,7 +35,7 @@ public class CardWrapper {
 //            if (!importCard.getPower().isEmpty()) importCard.setPowerInt(Integer.parseInt(importCard.getPower()));
 //            if (!importCard.getToughness().isEmpty()) importCard.setToughnessInt(Integer.parseInt(importCard.getToughness()));
             
-            MTGSet setRead = setRepo.findByName(importCard.getSetName());
+            MTGSet setRead = setRepo.findByCode(importCard.getSetCode());
 
             if ( setRead == null){
                 setRead = new MTGSet();

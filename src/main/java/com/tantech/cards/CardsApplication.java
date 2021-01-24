@@ -3,9 +3,10 @@ package com.tantech.cards;
 import com.tantech.cards.dbimport.DbImportService;
 import com.tantech.cards.search.CardSearchService;
 import com.tantech.cards.ui.CardsAppWindow;
+import com.tantech.cards.ui.CardsSwingUI;
 import static java.lang.System.exit;
 import java.util.Scanner;
-import org.apache.pivot.wtk.DesktopApplicationContext;
+//import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,8 @@ public class CardsApplication implements CommandLineRunner {
     private DbImportService dbImportService;
     
     @Autowired
-    CardsAppWindow mainWindow;
+    CardsSwingUI mainWindow;
+//    CardsAppWindow mainWindow;
     
 
     public static void main(String[] args) {
@@ -33,7 +35,39 @@ public class CardsApplication implements CommandLineRunner {
         
         if (args.length == 0){
         
-            DesktopApplicationContext.main(mainWindow, args);
+//            DesktopApplicationContext.main(mainWindow, args);
+            /* Set the Nimbus look and feel */
+            //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+            /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+             * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+             */
+            try {
+                for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                    if ("Nimbus".equals(info.getName())) {
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
+                    }
+                }
+            } catch (ClassNotFoundException ex) {
+                java.util.logging.Logger.getLogger(CardsSwingUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                java.util.logging.Logger.getLogger(CardsSwingUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                java.util.logging.Logger.getLogger(CardsSwingUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+                java.util.logging.Logger.getLogger(CardsSwingUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            }
+            //</editor-fold>
+
+            /* Create and display the form */
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    mainWindow.updateOwnedTable("", "", "", "", "");
+                    mainWindow.setTitle("Cards: The App");
+                    mainWindow.addNameSearchSuggestions();
+                    mainWindow.setVisible(true);
+                }
+            });
         }else {
            
             for (String arg: args){

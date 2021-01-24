@@ -20,6 +20,8 @@ import org.springframework.data.jpa.repository.Query;
 // CRUD refers Create, Read, Update, Delete
 public interface CardRepository extends CrudRepository<Card, Integer> {
     
+    public Card findByCardId(Integer cardId);
+    
     public Set<Card> findByName(String name);
     
     public Card findByNameAndMtgSet(String name, MTGSet mtgSet);
@@ -28,7 +30,7 @@ public interface CardRepository extends CrudRepository<Card, Integer> {
     
     public Card findByNameAndSetCode(String name, String setCode);
     
-    public Card findBySetCodeAndNumber(String setCode, String cardNumber);
+    public Card findFirstBySetCodeAndNumber(String setCode, String cardNumber);
     
     @Query("select distinct u.name from Card u ")
     List<String> findByAsArrayAndSort(Sort sort);
